@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slices/categoriesSlice";
 import LayoutContainer from "../../components/layoutContainer";
-import Breadcrumbs from "../../components/Breadcrumbs";
+import Breadcrumbs from "../../components/breadcrumbs";
 import { API_URL } from "../../constants/api";
 
 function CategoriesPage() {
