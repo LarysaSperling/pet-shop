@@ -31,6 +31,7 @@ function CategoryProductsPage() {
     async function loadCategoryProducts() {
       try {
         setStatus("loading");
+
         const response = await axios.get(
           `${API_URL}${API_ENDPOINTS.CATEGORIES}/${id}`
         );
@@ -51,11 +52,15 @@ function CategoryProductsPage() {
     let result = [...products];
 
     if (priceFrom) {
-      result = result.filter((item) => Number(item.price) >= Number(priceFrom));
+      result = result.filter(
+        (item) => Number(item.discont_price ?? item.price) >= Number(priceFrom)
+      );
     }
 
     if (priceTo) {
-      result = result.filter((item) => Number(item.price) <= Number(priceTo));
+      result = result.filter(
+        (item) => Number(item.discont_price ?? item.price) <= Number(priceTo)
+      );
     }
 
     if (onlyDiscounted) {
@@ -139,36 +144,103 @@ function CategoryProductsPage() {
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Typography sx={{ fontWeight: 600 }}>Price</Typography>
+          <Typography
+            sx={{
+              fontFamily: "Montserrat, sans-serif",
+              fontWeight: 600,
+              fontSize: "20px",
+              lineHeight: "130%",
+              color: "#282828",
+            }}
+          >
+            Price
+          </Typography>
+
           <OutlinedInput
+            id="category-price-from"
+            name="priceFrom"
             placeholder="from"
             value={priceFrom}
             onChange={(e) => setPriceFrom(e.target.value)}
-            sx={{ width: "112px", height: "36px" }}
+            autoComplete="off"
+            sx={{
+              width: "112px",
+              height: "36px",
+              borderRadius: "6px",
+              fontFamily: "Montserrat, sans-serif",
+              fontSize: "16px",
+            }}
           />
+
           <OutlinedInput
+            id="category-price-to"
+            name="priceTo"
             placeholder="to"
             value={priceTo}
             onChange={(e) => setPriceTo(e.target.value)}
-            sx={{ width: "112px", height: "36px" }}
+            autoComplete="off"
+            sx={{
+              width: "112px",
+              height: "36px",
+              borderRadius: "6px",
+              fontFamily: "Montserrat, sans-serif",
+              fontSize: "16px",
+            }}
           />
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Typography sx={{ fontWeight: 600 }}>Discounted items</Typography>
+          <Typography
+            sx={{
+              fontFamily: "Montserrat, sans-serif",
+              fontWeight: 600,
+              fontSize: "20px",
+              lineHeight: "130%",
+              color: "#282828",
+            }}
+          >
+            Discounted items
+          </Typography>
+
           <Checkbox
+            id="category-only-discounted"
+            name="onlyDiscounted"
             checked={onlyDiscounted}
             onChange={(e) => setOnlyDiscounted(e.target.checked)}
+            slotProps={{
+              input: {
+                "aria-label": "Discounted items only",
+              },
+            }}
           />
         </Box>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Typography sx={{ fontWeight: 600 }}>Sorted</Typography>
+          <Typography
+            sx={{
+              fontFamily: "Montserrat, sans-serif",
+              fontWeight: 600,
+              fontSize: "20px",
+              lineHeight: "130%",
+              color: "#282828",
+            }}
+          >
+            Sorted
+          </Typography>
+
           <FormControl sx={{ minWidth: "200px" }}>
             <Select
+              id="category-sort"
+              name="sortType"
               value={sortType}
               onChange={(e) => setSortType(e.target.value)}
               size="small"
+              sx={{
+                height: "36px",
+                borderRadius: "6px",
+                fontFamily: "Montserrat, sans-serif",
+                fontSize: "16px",
+              }}
             >
               <MenuItem value="default">by default</MenuItem>
               <MenuItem value="price-asc">price: low to high</MenuItem>
