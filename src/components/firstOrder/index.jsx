@@ -82,15 +82,7 @@ function FirstOrder() {
     if (hasErrors) return;
 
     try {
-     await axios.post(
-  `${API_URL}${API_ENDPOINTS.SALE}/send`,
-  formData,
-  {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }
-);
+      await axios.post(`${API_URL}${API_ENDPOINTS.SALE}/send`, formData);
 
       setSubmitted(true);
       setFormData({
@@ -174,13 +166,15 @@ function FirstOrder() {
 
   return (
     <Section
-      sx={{ 
+      sx={{
         maxWidth: "1440px",
-        margin: "0 auto" }}
+        margin: "0 auto",
+      }}
     >
       <Box
         sx={{
-          background: "linear-gradient(261.47deg, #0D50FF 32.63%, #2451C6 98.96%)",
+          background:
+          "linear-gradient(90deg, #0D50FF 0%, #2451C6 100%)",
           borderRadius: "12px",
           pt: { xs: "24px", md: "32px" },
           overflow: "hidden",
@@ -233,12 +227,14 @@ function FirstOrder() {
             <Box
               component="form"
               onSubmit={handleSubmit}
-      
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 gap: "16px",
                 pb: { xs: "24px", md: "32px" },
+                width: "100%",
+                maxWidth: "516px",
+                justifySelf: "end",
               }}
             >
               <FormControl fullWidth error={Boolean(errors.name)}>
@@ -278,7 +274,7 @@ function FirstOrder() {
               <FormControl fullWidth error={Boolean(errors.email)}>
                 <OutlinedInput
                   name="email"
-                   id="first-order-email"
+                  id="first-order-email"
                   placeholder="Email"
                   value={formData.email}
                   onChange={handleChange}
@@ -292,37 +288,35 @@ function FirstOrder() {
                 )}
               </FormControl>
 
-             <Button
-  type="submit"
-  disabled={submitted}
-  variant="contained"
-  sx={{
-    height: "58px",
-    borderRadius: "8px",
-    backgroundColor: submitted ? "#FFFFFF" : "#FFFFFF",
-    color: submitted ? "#0D50FF" : "#282828",
-    textTransform: "none",
-    fontFamily: "Montserrat, sans-serif",
-    fontWeight: 600,
-    fontSize: "20px",
-    lineHeight: "130%",
-    boxShadow: "none",
-
-    "&:hover": {
-      backgroundColor: submitted ? "#FFFFFF" : "#282828",
-      color: submitted ? "#0D50FF" : "#FFFFFF",
-      boxShadow: "none",
-    },
-
-    "&.Mui-disabled": {
-      backgroundColor: "#FFFFFF",
-      color: "#0D50FF",
-      opacity: 1,
-    },
-  }}
->
-  {submitted ? "Request Submitted" : "Get a discount"}
-</Button>
+              <Button
+                type="submit"
+                disabled={submitted}
+                variant="contained"
+                sx={{
+                  height: "58px",
+                  borderRadius: "8px",
+                  backgroundColor: "#FFFFFF",
+                  color: submitted ? "#0D50FF" : "#282828",
+                  textTransform: "none",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontWeight: 600,
+                  fontSize: "20px",
+                  lineHeight: "130%",
+                  boxShadow: "none",
+                  "&:hover": {
+                    backgroundColor: submitted ? "#FFFFFF" : "#282828",
+                    color: submitted ? "#0D50FF" : "#FFFFFF",
+                    boxShadow: "none",
+                  },
+                  "&.Mui-disabled": {
+                    backgroundColor: "#FFFFFF",
+                    color: "#0D50FF",
+                    opacity: 1,
+                  },
+                }}
+              >
+                {submitted ? "Request Submitted" : "Get a discount"}
+              </Button>
             </Box>
           </Box>
         </LayoutContainer>
