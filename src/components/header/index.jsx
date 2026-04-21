@@ -1,11 +1,5 @@
 import { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Box,
-  IconButton,
-  Drawer,
-} from "@mui/material";
+import { AppBar, Toolbar, Box, IconButton, Drawer } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import basketIcon from "../../assets/icons/basket.svg";
@@ -43,99 +37,134 @@ function Header() {
               sx={{
                 minHeight: { xs: "72px", md: "128px" },
                 py: { xs: "12px", md: "20px" },
+                px: { xs: "20px", md: 0 },
                 display: "grid",
                 gridTemplateColumns: {
-                  xs: "44px 1fr 44px 48px", 
-                  sm: "56px 1fr 48px",      
-                  md: "70px 1fr 48px",     
+                  xs: "52px 1fr 52px",
+                  sm: "56px 1fr 48px",
+                  md: "70px 1fr 48px",
                 },
                 alignItems: "center",
                 columnGap: { xs: "12px", md: "24px" },
               }}
             >
-              <Box sx={{ pl: { xs: "20px", md: "40px" } }}>
-                <Link to="/" style={{ display: "flex" }}>
-                  <Box
-                    component="img"
-                    src={logoImg}
-                    alt="logo"
-                    sx={{
-                      width: { xs: "44px", sm: "56px", md: "70px" },
-                      height: { xs: "44px", sm: "56px", md: "70px" },
-                    }}
-                  />
-                </Link>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-start",
+                  pl: { xs: 0, md: "40px" },
+                }}
+              >
+                <Box sx={{ display: { xs: "flex", sm: "none" } }}>
+                  <IconButton
+                    onClick={() => setMenuOpen(true)}
+                    sx={{ p: 0, display: "flex", alignItems: "center" }}
+                  >
+                    <MenuIcon
+                      sx={{
+                        fontSize: { xs: 38, sm: 42 },
+                        color: "#282828",
+                      }}
+                    />
+                  </IconButton>
+                </Box>
+
+                <Box sx={{ display: { xs: "none", sm: "flex" } }}>
+                  <Link to="/" style={{ display: "flex" }}>
+                    <Box
+                      component="img"
+                      src={logoImg}
+                      alt="logo"
+                      sx={{
+                        width: { sm: "56px", md: "70px" },
+                        height: { sm: "56px", md: "70px" },
+                      }}
+                    />
+                  </Link>
+                </Box>
               </Box>
 
               <Box
                 sx={{
-                  display: { xs: "none", sm: "flex" },
+                  display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  gap: { sm: "16px", md: "24px", lg: "32px" },
                 }}
               >
-                {navItems.map((item) => (
-                  <Box
-                    key={item.path}
-                    component={NavLink}
-                    to={item.path}
-                    end={item.path === "/"}
-                    sx={{
-                      fontFamily: "Montserrat, sans-serif",
-                      fontWeight: 500,
-                      lineHeight: "130%",
-                      textDecoration: "none",
-                      transition: "0.2s ease",
+                <Box sx={{ display: { xs: "flex", sm: "none" } }}>
+                  <Link to="/" style={{ display: "flex" }}>
+                    <Box
+                      component="img"
+                      src={logoImg}
+                      alt="logo"
+                      sx={{
+                        width: "56px",
+                        height: "56px",
+                      }}
+                    />
+                  </Link>
+                </Box>
 
-                      fontSize: {
-                        sm: "14px", 
-                        md: "20px", 
-                      },
-
-                      color: "#282828",
-
-                      "&.active": {
-                        color: "#0D50FF",
-                      },
-
-                      "&:hover": {
-                        color: "#0D50FF",
-                      },
-                    }}
-                  >
-                    {item.title}
-                  </Box>
-                ))}
-              </Box>
-
-              <Box
-                sx={{
-                  display: { xs: "flex", sm: "none" },
-                  justifyContent: "center",
-                }}
-              >
-                <IconButton onClick={() => setMenuOpen(true)}>
-                  <MenuIcon sx={{ fontSize: 32 }} />
-                </IconButton>
+                <Box
+                  sx={{
+                    display: { xs: "none", sm: "flex" },
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: { sm: "16px", md: "24px", lg: "32px" },
+                  }}
+                >
+                  {navItems.map((item) => (
+                    <Box
+                      key={item.path}
+                      component={NavLink}
+                      to={item.path}
+                      end={item.path === "/"}
+                      sx={{
+                        fontFamily: "Montserrat, sans-serif",
+                        fontWeight: 500,
+                        lineHeight: "130%",
+                        textDecoration: "none",
+                        transition: "0.2s ease",
+                        fontSize: {
+                          sm: "14px",
+                          md: "20px",
+                        },
+                        color: "#282828",
+                        "&.active": {
+                          color: "#0D50FF",
+                        },
+                        "&:hover": {
+                          color: "#0D50FF",
+                        },
+                      }}
+                    >
+                      {item.title}
+                    </Box>
+                  ))}
+                </Box>
               </Box>
 
               <Box
                 sx={{
                   display: "flex",
                   justifyContent: "flex-end",
-                  pr: { xs: "20px", md: "40px" },
+                  pr: { xs: 0, md: "40px" },
                   position: "relative",
                 }}
               >
-                <IconButton component={Link} to="/cart" sx={{ p: 0 }}>
+                <IconButton
+                  component={Link}
+                  to="/cart"
+                  sx={{ p: 0, display: "flex", alignItems: "center" }}
+                >
                   <Box
                     component="img"
                     src={basketIcon}
                     alt="cart"
                     sx={{
-                      width: { xs: "44px", md: "48px" },
-                      height: { xs: "44px", md: "48px" },
+                      width: { xs: "46px", md: "48px" },
+                      height: { xs: "46px", md: "48px" },
                     }}
                   />
 
@@ -169,7 +198,7 @@ function Header() {
       </AppBar>
 
       <Drawer
-        anchor="right"
+        anchor="left"
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
         slotProps={{
@@ -197,13 +226,12 @@ function Header() {
               end={item.path === "/"}
               onClick={() => setMenuOpen(false)}
               sx={{
-                fontFamily: "Montserrat",
+                fontFamily: "Montserrat, sans-serif",
                 fontSize: "20px",
                 textDecoration: "none",
                 color: "#282828",
                 py: "12px",
                 borderBottom: "1px solid #EEEEEE",
-
                 "&.active": {
                   color: "#0D50FF",
                 },
