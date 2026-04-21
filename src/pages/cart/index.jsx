@@ -562,83 +562,97 @@ function CartPage() {
       </LayoutContainer>
 
       <Modal
-        open={isModalOpen}
-        onClose={closeModal}
-        slotProps={{
-          backdrop: {
-            sx: modalBackdropSx,
-          },
+  open={isModalOpen}
+  onClose={closeModal}
+  slotProps={{
+    backdrop: {
+      sx: modalBackdropSx,
+    },
+  }}
+>
+  <Box
+    sx={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      width: {
+        xs: "calc(100% - 32px)",
+        sm: "480px",
+        md: "548px",
+      },
+      maxHeight: "calc(100vh - 32px)",
+      overflowY: "auto",
+      backgroundColor: "#0D50FF",
+      borderRadius: { xs: "10px", sm: "12px" },
+      p: { xs: "20px", sm: "24px", md: "32px" },
+      outline: "none",
+      boxShadow: "0 20px 60px rgba(0, 0, 0, 0.25)",
+    }}
+  >
+    <IconButton
+      onClick={closeModal}
+      sx={{
+        position: "absolute",
+        top: { xs: "10px", sm: "12px" },
+        right: { xs: "10px", sm: "12px" },
+        color: "#FFFFFF",
+        p: 0,
+      }}
+    >
+      <Box
+        component="span"
+        sx={{
+          fontSize: { xs: "24px", sm: "28px" },
+          lineHeight: 1,
         }}
       >
-        <Box
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            width: { xs: "calc(100% - 40px)", sm: "548px" },
-            backgroundColor: "#0D50FF",
-            borderRadius: "12px",
-            p: "32px",
-            outline: "none",
-            boxShadow: "0 20px 60px rgba(0, 0, 0, 0.25)",
-          }}
-        >
-          <IconButton
-            onClick={closeModal}
-            sx={{
-              position: "absolute",
-              top: "12px",
-              right: "12px",
-              color: "#FFFFFF",
-              fontSize: "28px",
-            }}
-          >
-            ✕
-          </IconButton>
+        ✕
+      </Box>
+    </IconButton>
 
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 600,
-              fontSize: { xs: "32px", md: "40px" },
-              lineHeight: "110%",
-              color: "#FFFFFF",
-              mb: "24px",
-              pr: "32px",
-            }}
-          >
-            Congratulations!
-          </Typography>
+    <Typography
+      sx={{
+        fontFamily: "Montserrat, sans-serif",
+        fontWeight: 600,
+        fontSize: { xs: "28px", sm: "32px", md: "40px" },
+        lineHeight: "110%",
+        color: "#FFFFFF",
+        mb: { xs: "16px", sm: "20px", md: "24px" },
+        pr: { xs: "28px", sm: "32px" },
+      }}
+    >
+      Congratulations!
+    </Typography>
 
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 500,
-              fontSize: "20px",
-              lineHeight: "130%",
-              color: "#FFFFFF",
-              opacity: 0.95,
-            }}
-          >
-            Your order has been successfully placed on the website.
-          </Typography>
+    <Typography
+      sx={{
+        fontFamily: "Montserrat, sans-serif",
+        fontWeight: 500,
+        fontSize: { xs: "16px", sm: "18px", md: "20px" },
+        lineHeight: "130%",
+        color: "#FFFFFF",
+        opacity: 0.95,
+      }}
+    >
+      Your order has been successfully placed on the website.
+    </Typography>
 
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 500,
-              fontSize: "20px",
-              lineHeight: "130%",
-              color: "#FFFFFF",
-              opacity: 0.95,
-              mt: "16px",
-            }}
-          >
-            A manager will contact you shortly to confirm your order.
-          </Typography>
-        </Box>
-      </Modal>
+    <Typography
+      sx={{
+        fontFamily: "Montserrat, sans-serif",
+        fontWeight: 500,
+        fontSize: { xs: "16px", sm: "18px", md: "20px" },
+        lineHeight: "130%",
+        color: "#FFFFFF",
+        opacity: 0.95,
+        mt: { xs: "12px", sm: "16px" },
+      }}
+    >
+      A manager will contact you shortly to confirm your order.
+    </Typography>
+  </Box>
+</Modal>
     </>
   );
 }
