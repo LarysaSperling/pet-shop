@@ -23,9 +23,11 @@ function Header() {
   return (
     <>
       <AppBar
-        position="static"
+        position="sticky"
         elevation={0}
         sx={{
+          top: 0,
+          zIndex: 1300,
           backgroundColor: "#FFFFFF",
           boxShadow: "none",
         }}
