@@ -15,6 +15,7 @@ function ProductPage() {
 
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("idle");
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   useEffect(() => {
     async function loadProduct() {
@@ -30,6 +31,7 @@ function ProductPage() {
           : response.data;
 
         setProduct(productData);
+        setIsDescriptionExpanded(false);
         setStatus("succeeded");
       } catch (error) {
         console.error("Failed to load product:", error);
@@ -76,6 +78,9 @@ function ProductPage() {
             100
         )
       : 0;
+
+  const shouldShowReadMore =
+    product.description && product.description.length > 180;
 
   return (
     <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
@@ -261,18 +266,43 @@ function ProductPage() {
             Description
           </Typography>
 
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 400,
-              fontSize: "16px",
-              lineHeight: "130%",
-              color: "#282828",
-              wordBreak: "break-word",
-            }}
-          >
-            {product.description}
-          </Typography>
+          <Box>
+            <Typography
+              sx={{
+                fontFamily: "Montserrat, sans-serif",
+                fontWeight: 400,
+                fontSize: "16px",
+                lineHeight: "130%",
+                color: "#282828",
+                wordBreak: "break-word",
+                overflow: "hidden",
+                display: "-webkit-box",
+                WebkitBoxOrient: "vertical",
+                WebkitLineClamp: isDescriptionExpanded ? "unset" : 10,
+              }}
+            >
+              {product.description}
+            </Typography>
+
+            {shouldShowReadMore && (
+              <Typography
+                onClick={() => setIsDescriptionExpanded((prev) => !prev)}
+                sx={{
+                  mt: "8px",
+                  fontFamily: "Montserrat, sans-serif",
+                  fontWeight: 500,
+                  fontSize: "16px",
+                  lineHeight: "130%",
+                  color: "#282828",
+                  textDecoration: "underline",
+                  cursor: "pointer",
+                  width: "fit-content",
+                }}
+              >
+                {isDescriptionExpanded ? "Read less" : "Read more"}
+              </Typography>
+            )}
+          </Box>
         </Box>
       </Box>
     </LayoutContainer>
