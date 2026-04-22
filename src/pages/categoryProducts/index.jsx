@@ -14,6 +14,7 @@ import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import ProductCard from "../../components/productCard";
 import { API_URL, API_ENDPOINTS } from "../../constants/api";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 function CategoryProductsPage() {
   const { id } = useParams();
@@ -22,10 +23,14 @@ function CategoryProductsPage() {
   const [products, setProducts] = useState([]);
   const [status, setStatus] = useState("idle");
 
-  const [priceFrom, setPriceFrom] = useState("");
-  const [priceTo, setPriceTo] = useState("");
-  const [onlyDiscounted, setOnlyDiscounted] = useState(false);
-  const [sortType, setSortType] = useState("default");
+  const [filters, setFilters] = useLocalStorage("categoryFilters", {
+    priceFrom: "",
+    priceTo: "",
+    onlyDiscounted: false,
+    sortType: "default",
+  });
+
+  const { priceFrom, priceTo, onlyDiscounted, sortType } = filters;
 
   useEffect(() => {
     async function loadCategoryProducts() {
@@ -161,7 +166,12 @@ function CategoryProductsPage() {
             name="priceFrom"
             placeholder="from"
             value={priceFrom}
-            onChange={(e) => setPriceFrom(e.target.value)}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                priceFrom: e.target.value,
+              }))
+            }
             autoComplete="off"
             sx={{
               width: "112px",
@@ -177,7 +187,12 @@ function CategoryProductsPage() {
             name="priceTo"
             placeholder="to"
             value={priceTo}
-            onChange={(e) => setPriceTo(e.target.value)}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                priceTo: e.target.value,
+              }))
+            }
             autoComplete="off"
             sx={{
               width: "112px",
@@ -206,7 +221,12 @@ function CategoryProductsPage() {
             id="category-only-discounted"
             name="onlyDiscounted"
             checked={onlyDiscounted}
-            onChange={(e) => setOnlyDiscounted(e.target.checked)}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                onlyDiscounted: e.target.checked,
+              }))
+            }
             slotProps={{
               input: {
                 "aria-label": "Discounted items only",
@@ -233,7 +253,12 @@ function CategoryProductsPage() {
               id="category-sort"
               name="sortType"
               value={sortType}
-              onChange={(e) => setSortType(e.target.value)}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  sortType: e.target.value,
+                }))
+              }
               size="small"
               sx={{
                 height: "36px",

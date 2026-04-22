@@ -7,21 +7,26 @@ import {
   MenuItem,
   OutlinedInput,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/slices/productsSlice";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import ProductCard from "../../components/productCard";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 function AllProducts() {
   const dispatch = useDispatch();
   const { items, status, error } = useSelector((state) => state.products);
 
-  const [priceFrom, setPriceFrom] = useState("");
-  const [priceTo, setPriceTo] = useState("");
-  const [onlyDiscounted, setOnlyDiscounted] = useState(false);
-  const [sortType, setSortType] = useState("default");
+  const [filters, setFilters] = useLocalStorage("allProductsFilters", {
+    priceFrom: "",
+    priceTo: "",
+    onlyDiscounted: false,
+    sortType: "default",
+  });
+
+  const { priceFrom, priceTo, onlyDiscounted, sortType } = filters;
 
   useEffect(() => {
     if (status === "idle") {
@@ -136,7 +141,12 @@ function AllProducts() {
             type="number"
             placeholder="from"
             value={priceFrom}
-            onChange={(e) => setPriceFrom(e.target.value)}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                priceFrom: e.target.value,
+              }))
+            }
             sx={{ width: "112px", height: "36px" }}
           />
 
@@ -146,7 +156,12 @@ function AllProducts() {
             type="number"
             placeholder="to"
             value={priceTo}
-            onChange={(e) => setPriceTo(e.target.value)}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                priceTo: e.target.value,
+              }))
+            }
             sx={{ width: "112px", height: "36px" }}
           />
         </Box>
@@ -158,7 +173,12 @@ function AllProducts() {
             id="only-discounted"
             name="onlyDiscounted"
             checked={onlyDiscounted}
-            onChange={(e) => setOnlyDiscounted(e.target.checked)}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                onlyDiscounted: e.target.checked,
+              }))
+            }
           />
         </Box>
 
@@ -170,7 +190,12 @@ function AllProducts() {
               id="sort-type"
               name="sortType"
               value={sortType}
-              onChange={(e) => setSortType(e.target.value)}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  sortType: e.target.value,
+                }))
+              }
               size="small"
             >
               <MenuItem value="default">by default</MenuItem>

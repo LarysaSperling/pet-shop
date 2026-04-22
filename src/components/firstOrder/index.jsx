@@ -12,13 +12,14 @@ import LayoutContainer from "../layoutContainer";
 import Section from "../section";
 import firstOrderPets from "../../assets/images/first-order-pets.png";
 import { API_URL, API_ENDPOINTS } from "../../constants/api";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 function FirstOrder() {
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: "",
-    email: "",
-  });
+  const [formData, setFormData] = useLocalStorage("discountForm", {
+  name: "",
+  phone: "",
+  email: "",
+});
 
   const [errors, setErrors] = useState({
     name: "",
