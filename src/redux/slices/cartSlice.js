@@ -1,7 +1,27 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const STORAGE_KEY = "cartItems";
+
+const loadFromStorage = () => {
+  try {
+    const data = localStorage.getItem(STORAGE_KEY);
+    return data ? JSON.parse(data) : [];
+  } catch (e) {
+    console.error("Load error:", e);
+    return [];
+  }
+};
+
+const saveToStorage = (items) => {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  } catch (e) {
+    console.error("Save error:", e);
+  }
+};
+
 const initialState = {
-  items: [],
+  items: loadFromStorage(), 
 };
 
 const cartSlice = createSlice({
@@ -18,6 +38,8 @@ const cartSlice = createSlice({
           count: 1,
         });
       }
+
+      saveToStorage(state.items);
     },
 
     increaseCount: (state, action) => {
@@ -27,6 +49,8 @@ const cartSlice = createSlice({
       if (item) {
         item.count += 1;
       }
+
+      saveToStorage(state.items);
     },
 
     decreaseCount: (state, action) => {
@@ -36,15 +60,21 @@ const cartSlice = createSlice({
       if (item && item.count > 1) {
         item.count -= 1;
       }
+
+      saveToStorage(state.items);
     },
 
     removeFromCart: (state, action) => {
       const id = action.payload;
       state.items = state.items.filter((item) => item.id !== id);
+
+      saveToStorage(state.items);
     },
 
     clearCart: (state) => {
       state.items = [];
+
+      saveToStorage(state.items);
     },
   },
 });
