@@ -7,21 +7,26 @@ import {
   MenuItem,
   OutlinedInput,
 } from "@mui/material";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/slices/productsSlice";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import ProductCard from "../../components/productCard";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 function AllSales() {
   const dispatch = useDispatch();
   const { items, status, error } = useSelector((state) => state.products);
 
-  const [priceFrom, setPriceFrom] = useState("");
-  const [priceTo, setPriceTo] = useState("");
-  const [sortType, setSortType] = useState("default");
-  const [onlyDiscounted, setOnlyDiscounted] = useState(true);
+  const [filters, setFilters] = useLocalStorage("salesFilters", {
+    priceFrom: "",
+    priceTo: "",
+    sortType: "default",
+    onlyDiscounted: true,
+  });
+
+  const { priceFrom, priceTo, sortType, onlyDiscounted } = filters;
 
   useEffect(() => {
     if (status === "idle") {
@@ -155,7 +160,12 @@ function AllSales() {
             name="priceFrom"
             placeholder="from"
             value={priceFrom}
-            onChange={(e) => setPriceFrom(e.target.value)}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                priceFrom: e.target.value,
+              }))
+            }
             autoComplete="off"
             sx={{
               width: "112px",
@@ -171,7 +181,12 @@ function AllSales() {
             name="priceTo"
             placeholder="to"
             value={priceTo}
-            onChange={(e) => setPriceTo(e.target.value)}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                priceTo: e.target.value,
+              }))
+            }
             autoComplete="off"
             sx={{
               width: "112px",
@@ -200,7 +215,12 @@ function AllSales() {
             id="sales-only-discounted"
             name="onlyDiscounted"
             checked={onlyDiscounted}
-            onChange={(e) => setOnlyDiscounted(e.target.checked)}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                onlyDiscounted: e.target.checked,
+              }))
+            }
             slotProps={{
               input: {
                 "aria-label": "Discounted items only",
@@ -233,7 +253,12 @@ function AllSales() {
               id="sales-sort"
               name="sortType"
               value={sortType}
-              onChange={(e) => setSortType(e.target.value)}
+              onChange={(e) =>
+                setFilters((prev) => ({
+                  ...prev,
+                  sortType: e.target.value,
+                }))
+              }
               size="small"
               sx={{
                 height: "36px",
