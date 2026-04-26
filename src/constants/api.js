@@ -1,5 +1,4 @@
-export const API_URL = "http://localhost:3333";
-
+export const API_URL = "https://pet-shop-api-3od3.onrender.com";
 export const API_ENDPOINTS = {
   PRODUCTS: "/products",
   CATEGORIES: "/categories",
