@@ -14,7 +14,11 @@ Designed as a scalable e-commerce application featuring catalog browsing, shoppi
 
 ## 🚀 Live Demo
 
-⚡ Deployment in progress via Railway
+Frontend:
+https://pet-shop-roan-five.vercel.app
+
+Backend API:
+Deployment in progress
 
 Project can be run locally:
 
