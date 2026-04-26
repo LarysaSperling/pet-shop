@@ -18,7 +18,7 @@ Frontend:
 https://pet-shop-roan-five.vercel.app
 
 Backend API:
-Deployment in progress
+https://pet-shop-api-3od3.onrender.com
 
 Project can be run locally:
 
