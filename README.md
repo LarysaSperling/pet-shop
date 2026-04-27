@@ -37,8 +37,10 @@ npm run dev
 - REST API integration
 - Responsive UI
 - State management
-- Backend CRUD operations
+- Full CRUD REST API (Create, Read, Delete)
 - SQLite database with Sequelize ORM
+- Protected admin endpoints (API key middleware)
+- Secure CORS configuration
 
 ---
 
