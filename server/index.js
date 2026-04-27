@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 
@@ -24,7 +25,7 @@ app.use(express.static("public"));
 
 app.use(
   cors({
-    origin: "*",
+    origin: "https://pet-shop-roan-five.vercel.app"
   })
 );
 
