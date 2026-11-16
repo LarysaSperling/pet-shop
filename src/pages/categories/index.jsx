@@ -6,7 +6,7 @@ import { fetchCategories } from "../../redux/slices/categoriesSlice";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import LoadingMessage from "../../components/loadingMessage";
-import { API_URL } from "../../constants/api";
+import FallbackImage from "../../components/fallbackImage";
 
 function CategoriesPage() {
   const dispatch = useDispatch();
@@ -72,9 +72,8 @@ function CategoriesPage() {
                 color: "inherit",
               }}
             >
-              <Box
-                component="img"
-                src={`${API_URL}/${category.image}`}
+              <FallbackImage
+                path={category.image}
                 alt={category.title}
                 sx={{
                   width: "100%",

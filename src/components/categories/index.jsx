@@ -6,7 +6,7 @@ import { fetchCategories } from "../../redux/slices/categoriesSlice";
 import LoadingMessage from "../loadingMessage";
 import LayoutContainer from "../layoutContainer";
 import Section from "../section";
-import { API_URL } from "../../constants/api";
+import FallbackImage from "../fallbackImage";
 
 function Categories() {
   const dispatch = useDispatch();
@@ -140,9 +140,8 @@ function Categories() {
                   },
                 }}
               >
-                <Box
-                  component="img"
-                  src={`${API_URL}/${category.image}`}
+                <FallbackImage
+                  path={category.image}
                   alt={category.title}
                   sx={{
                     width: "100%",

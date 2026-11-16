@@ -18,6 +18,7 @@ import {
 } from "../../redux/slices/cartSlice";
 import LayoutContainer from "../../components/layoutContainer";
 import { API_URL, API_ENDPOINTS } from "../../constants/api";
+import FallbackImage from "../../components/fallbackImage";
 
 function CartPage() {
   const dispatch = useDispatch();
@@ -277,9 +278,8 @@ function CartPage() {
                     backgroundColor: "#FFFFFF",
                   }}
                 >
-                  <Box
-                    component="img"
-                    src={`${API_URL}/${item.image}`}
+                  <FallbackImage
+                    path={item.image}
                     alt={item.title}
                     sx={{
                       width: "100%",

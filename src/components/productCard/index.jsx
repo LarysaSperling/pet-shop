@@ -2,7 +2,7 @@ import { Box, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/slices/cartSlice";
-import { API_URL } from "../../constants/api";
+import FallbackImage from "../fallbackImage";
 
 function ProductCard({ product }) {
   const dispatch = useDispatch();
@@ -59,9 +59,8 @@ function ProductCard({ product }) {
       }}
     >
       <Box sx={{ position: "relative" }}>
-        <Box
-          component="img"
-          src={`${API_URL}/${product.image}`}
+        <FallbackImage
+          path={product.image}
           alt={product.title}
           sx={{
             width: "100%",

@@ -8,6 +8,7 @@ import LoadingMessage from "../../components/loadingMessage";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import { API_URL, API_ENDPOINTS } from "../../constants/api";
+import FallbackImage from "../../components/fallbackImage";
 
 function ProductPage() {
   const { id } = useParams();
@@ -114,9 +115,8 @@ function ProductPage() {
             minHeight: { xs: "320px", sm: "420px", md: "520px" },
           }}
         >
-          <Box
-            component="img"
-            src={`${API_URL}/${product.image}`}
+          <FallbackImage
+            path={product.image}
             alt={product.title}
             sx={{
               width: "100%",
