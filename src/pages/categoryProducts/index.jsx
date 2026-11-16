@@ -10,6 +10,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import LoadingMessage from "../../components/loadingMessage";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import ProductCard from "../../components/productCard";
@@ -103,7 +104,7 @@ function CategoryProductsPage() {
   if (status === "loading") {
     return (
       <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
-        <Typography>Loading...</Typography>
+        <LoadingMessage />
       </LayoutContainer>
     );
   }

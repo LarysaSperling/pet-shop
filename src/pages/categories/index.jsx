@@ -5,11 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slices/categoriesSlice";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
+import LoadingMessage from "../../components/loadingMessage";
 import { API_URL } from "../../constants/api";
 
 function CategoriesPage() {
   const dispatch = useDispatch();
-  const { items, status } = useSelector((state) => state.categories);
+  const { items, status, error } = useSelector((state) => state.categories);
 
   useEffect(() => {
     if (status === "idle") {
@@ -39,6 +40,16 @@ function CategoriesPage() {
         >
           Categories
         </Typography>
+
+        {status === "loading" && (
+          <LoadingMessage text="Loading categories..." />
+        )}
+
+        {status === "failed" && (
+          <Typography color="error">
+            Failed to load categories: {error}
+          </Typography>
+        )}
 
         <Box
           sx={{

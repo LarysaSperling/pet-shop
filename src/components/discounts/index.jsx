@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/slices/productsSlice";
+import LoadingMessage from "../loadingMessage";
 import LayoutContainer from "../layoutContainer";
 import Section from "../section";
 import ProductCard from "../productCard";
@@ -32,7 +33,7 @@ function Discounts() {
     return (
       <Section>
         <LayoutContainer>
-          <Typography>Loading sale products...</Typography>
+          <LoadingMessage text="Loading sale products..." />
         </LayoutContainer>
       </Section>
     );

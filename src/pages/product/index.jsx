@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/slices/cartSlice";
+import LoadingMessage from "../../components/loadingMessage";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import { API_URL, API_ENDPOINTS } from "../../constants/api";
@@ -45,7 +46,7 @@ function ProductPage() {
   if (status === "loading") {
     return (
       <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
-        <Typography>Loading...</Typography>
+        <LoadingMessage />
       </LayoutContainer>
     );
   }

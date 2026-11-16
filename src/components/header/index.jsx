@@ -61,6 +61,8 @@ function Header() {
                 <Box sx={{ display: { xs: "flex", sm: "none" } }}>
                   <IconButton
                     onClick={() => setMenuOpen(true)}
+                    aria-label="Open menu"
+                    aria-expanded={menuOpen}
                     sx={{ p: 0, display: "flex", alignItems: "center" }}
                   >
                     <MenuIcon
@@ -203,6 +205,8 @@ function Header() {
         anchor="left"
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
+        // Header has zIndex 1300, so the menu must be above it
+        sx={{ zIndex: 1400 }}
         slotProps={{
           paper: {
             sx: {
@@ -214,7 +218,7 @@ function Header() {
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "flex-end", mb: "24px" }}>
-          <IconButton onClick={() => setMenuOpen(false)}>
+          <IconButton onClick={() => setMenuOpen(false)} aria-label="Close menu">
             <CloseIcon />
           </IconButton>
         </Box>

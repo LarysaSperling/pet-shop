@@ -36,6 +36,8 @@ function CartPage() {
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const totalCount = cartItems.reduce((sum, item) => sum + item.count, 0);
 
@@ -93,6 +95,9 @@ function CartPage() {
     const hasErrors = Object.values(nextErrors).some(Boolean);
     if (hasErrors || cartItems.length === 0) return;
 
+    setIsSending(true);
+    setSubmitError("");
+
     try {
       await axios.post(`${API_URL}${API_ENDPOINTS.ORDER}/send`, {
         customer: formData,
@@ -124,6 +129,11 @@ function CartPage() {
       });
     } catch (error) {
       console.error("Order submit error:", error);
+      setSubmitError(
+        "Sorry, we could not place your order. Please check your connection and try again."
+      );
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -435,7 +445,7 @@ function CartPage() {
                   mb: "16px",
                 }}
               >
-                {totalCount} items
+                {totalCount} {totalCount === 1 ? "item" : "items"}
               </Typography>
 
               <Box
@@ -541,6 +551,7 @@ function CartPage() {
 
                 <Button
                   type="submit"
+                  disabled={isSending}
                   sx={{
                     height: "58px",
                     borderRadius: "8px",
@@ -556,10 +567,24 @@ function CartPage() {
                       backgroundColor: "#282828",
                       boxShadow: "none",
                     },
+                    "&.Mui-disabled": {
+                      backgroundColor: "#0D50FF",
+                      color: "#FFFFFF",
+                      opacity: 0.7,
+                    },
                   }}
                 >
-                  Order
+                  {isSending ? "Sending..." : "Order"}
                 </Button>
+
+                {submitError && (
+                  <Typography
+                    role="alert"
+                    sx={{ fontSize: "14px", color: "error.main" }}
+                  >
+                    {submitError}
+                  </Typography>
+                )}
               </Box>
             </Box>
           </Box>

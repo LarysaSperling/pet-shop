@@ -10,6 +10,7 @@ import {
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/slices/productsSlice";
+import LoadingMessage from "../../components/loadingMessage";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import ProductCard from "../../components/productCard";
@@ -96,7 +97,7 @@ function AllSales() {
   if (status === "loading") {
     return (
       <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
-        <Typography>Loading sale products...</Typography>
+        <LoadingMessage text="Loading sale products..." />
       </LayoutContainer>
     );
   }

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slices/categoriesSlice";
+import LoadingMessage from "../loadingMessage";
 import LayoutContainer from "../layoutContainer";
 import Section from "../section";
 import { API_URL } from "../../constants/api";
@@ -21,7 +22,7 @@ function Categories() {
     return (
       <Section>
         <LayoutContainer>
-          <Typography>Loading categories...</Typography>
+          <LoadingMessage text="Loading categories..." />
         </LayoutContainer>
       </Section>
     );

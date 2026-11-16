@@ -28,6 +28,8 @@ function FirstOrder() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSending, setIsSending] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -82,6 +84,9 @@ function FirstOrder() {
     const hasErrors = Object.values(nextErrors).some(Boolean);
     if (hasErrors) return;
 
+    setIsSending(true);
+    setSubmitError("");
+
     try {
       await axios.post(`${API_URL}${API_ENDPOINTS.SALE}/send`, formData);
 
@@ -98,6 +103,11 @@ function FirstOrder() {
       });
     } catch (error) {
       console.error("Discount request error:", error);
+      setSubmitError(
+        "Sorry, we could not send your request. Please try again."
+      );
+    } finally {
+      setIsSending(false);
     }
   };
 
@@ -291,7 +301,7 @@ function FirstOrder() {
 
               <Button
                 type="submit"
-                disabled={submitted}
+                disabled={submitted || isSending}
                 variant="contained"
                 sx={{
                   height: "58px",
@@ -316,8 +326,26 @@ function FirstOrder() {
                   },
                 }}
               >
-                {submitted ? "Request Submitted" : "Get a discount"}
+                {submitted
+                  ? "Request Submitted"
+                  : isSending
+                    ? "Sending..."
+                    : "Get a discount"}
               </Button>
+
+              {submitError && (
+                <Typography
+                  role="alert"
+                  sx={{
+                    fontFamily: "Montserrat, sans-serif",
+                    fontSize: "14px",
+                    color: "#FFFFFF",
+                    fontWeight: 600,
+                  }}
+                >
+                  {submitError}
+                </Typography>
+              )}
             </Box>
           </Box>
         </LayoutContainer>
