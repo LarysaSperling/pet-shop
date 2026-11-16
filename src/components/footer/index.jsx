@@ -34,7 +34,7 @@ function Footer() {
               sx={{
                 backgroundColor: "#F1F3F4",
                 borderRadius: "12px",
-                p: "32px",
+                p: { xs: "24px", sm: "32px" },
               }}
             >
               <Typography
@@ -54,12 +54,16 @@ function Footer() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: { xs: "32px", md: "40px" },
+                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "40px" },
                   lineHeight: "110%",
                   color: "#282828",
                 }}
               >
-                +49 30 915-88492
+                {/* nowrap keeps "915-88492" together on narrow screens */}
+                +49 30{" "}
+                <Box component="span" sx={{ whiteSpace: "nowrap" }}>
+                  915-88492
+                </Box>
               </Typography>
             </Box>
 
@@ -67,7 +71,7 @@ function Footer() {
               sx={{
                 backgroundColor: "#F1F3F4",
                 borderRadius: "12px",
-                p: "32px",
+                p: { xs: "24px", sm: "32px" },
               }}
             >
               <Typography
@@ -120,7 +124,7 @@ function Footer() {
               sx={{
                 backgroundColor: "#F1F3F4",
                 borderRadius: "12px",
-                p: "32px",
+                p: { xs: "24px", sm: "32px" },
               }}
             >
               <Typography
@@ -140,7 +144,7 @@ function Footer() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: { xs: "32px", md: "40px" },
+                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "40px" },
                   lineHeight: "110%",
                   color: "#282828",
                 }}
@@ -153,7 +157,7 @@ function Footer() {
               sx={{
                 backgroundColor: "#F1F3F4",
                 borderRadius: "12px",
-                p: "32px",
+                p: { xs: "24px", sm: "32px" },
               }}
             >
               <Typography
@@ -173,7 +177,7 @@ function Footer() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: { xs: "32px", md: "40px" },
+                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "40px" },
                   lineHeight: "110%",
                   color: "#282828",
                 }}

@@ -234,7 +234,9 @@ function CartPage() {
               to="/products"
               sx={{
                 height: "58px",
-                px: "56px",
+                px: { xs: "24px", sm: "56px" },
+                width: { xs: "100%", sm: "auto" },
+                whiteSpace: "nowrap",
                 borderRadius: "8px",
                 backgroundColor: "#0D50FF",
                 color: "#FFFFFF",

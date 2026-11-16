@@ -56,8 +56,22 @@ function ProductFilters({
       "aria-invalid": Boolean(priceError),
       "aria-describedby": priceError ? priceErrorId : undefined,
     },
-    sx: { ...fieldSx, width: "112px" },
+    // On phones both fields share the row equally, from 600px they are 112px
+    sx: {
+      ...fieldSx,
+      width: { xs: "auto", sm: "112px" },
+      flex: { xs: "1 1 0", sm: "0 0 auto" },
+      minWidth: 0,
+    },
   });
+
+  // On phones each filter group takes a full row
+  const groupSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: "16px",
+    width: { xs: "100%", sm: "auto" },
+  };
 
   return (
     <Box sx={{ mb: "40px" }}>
@@ -72,7 +86,7 @@ function ProductFilters({
         <Box
           role="group"
           aria-labelledby={priceLabelId}
-          sx={{ display: "flex", alignItems: "center", gap: "16px" }}
+          sx={groupSx}
         >
           <Typography id={priceLabelId} sx={labelSx}>
             Price
@@ -98,12 +112,17 @@ function ProductFilters({
           />
         </Box>
 
-        <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        <Box sx={groupSx}>
           <Typography id={sortLabelId} sx={labelSx}>
             Sorted
           </Typography>
 
-          <FormControl sx={{ minWidth: "200px" }}>
+          <FormControl
+            sx={{
+              minWidth: { xs: 0, sm: "200px" },
+              flex: { xs: "1 1 auto", sm: "0 0 auto" },
+            }}
+          >
             <Select
               id={`${idPrefix}-sort`}
               labelId={sortLabelId}
