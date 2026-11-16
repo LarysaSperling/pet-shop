@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/slices/cartSlice";
+import { fetchProducts } from "../../redux/slices/productsSlice";
 import LoadingMessage from "../../components/loadingMessage";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
@@ -16,15 +17,30 @@ function ProductPage() {
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
-  const [product, setProduct] = useState(null);
-  const [status, setStatus] = useState("idle");
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  // If the product list is already in Redux, show the product right away.
+  // Then the page has its full height at once, so the browser "Back" button
+  // can restore the scroll position (and there is no "Loading..." flash).
+  const cachedProduct = useSelector((state) =>
+    state.products.items.find((item) => String(item.id) === String(id))
+  );
+
+  // Fill the shared product list once (the thunk skips the request if it is loaded)
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
+  // Result of the last request: { id, product, failed }
+  const [loaded, setLoaded] = useState({ id: null, product: null, failed: false });
+  // "Read more" is open only for the product it was opened on
+  const [expandedId, setExpandedId] = useState(null);
+  const isDescriptionExpanded = expandedId === id;
 
   useEffect(() => {
+    // Ignore an old response if the user already opened another product
+    let ignore = false;
+
     async function loadProduct() {
       try {
-        setStatus("loading");
-
         const response = await axios.get(
           `${API_URL}${API_ENDPOINTS.PRODUCTS}/${id}`
         );
@@ -33,19 +49,25 @@ function ProductPage() {
           ? response.data[0]
           : response.data;
 
-        setProduct(productData);
-        setIsDescriptionExpanded(false);
-        setStatus("succeeded");
+        if (!ignore) setLoaded({ id, product: productData, failed: false });
       } catch (error) {
         console.error("Failed to load product:", error);
-        setStatus("failed");
+        if (!ignore) setLoaded({ id, product: null, failed: true });
       }
     }
 
     loadProduct();
+
+    return () => {
+      ignore = true;
+    };
   }, [id]);
 
-  if (status === "loading") {
+  const isLoadedForThisId = loaded.id === id;
+  const product = (isLoadedForThisId && loaded.product) || cachedProduct || null;
+  const isFailed = isLoadedForThisId && loaded.failed;
+
+  if (!product && !isFailed) {
     return (
       <LayoutContainer sx={PAGE_SPACING}>
         <LoadingMessage />
@@ -53,7 +75,7 @@ function ProductPage() {
     );
   }
 
-  if (status === "failed" || !product) {
+  if (!product) {
     return (
       <LayoutContainer sx={PAGE_SPACING}>
         <Typography color="error">Product not found.</Typography>
@@ -288,7 +310,7 @@ function ProductPage() {
 
             {shouldShowReadMore && (
               <Typography
-                onClick={() => setIsDescriptionExpanded((prev) => !prev)}
+                onClick={() => setExpandedId(isDescriptionExpanded ? null : id)}
                 sx={{
                   mt: "8px",
                   fontFamily: "Montserrat, sans-serif",

@@ -2,6 +2,16 @@ import { Box, Typography, Button } from "@mui/material";
 import heroImg from "../../assets/images/hero.jpg";
 import { MOBILE, mobile } from "../../theme/mobile";
 
+// Smoothly scrolls to the sale section (instant if the user prefers reduced motion)
+function scrollToSale(event) {
+  const sale = document.getElementById("sale");
+  if (!sale) return; // fall back to the normal "#sale" link
+
+  event.preventDefault();
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  sale.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+}
+
 function Hero() {
   return (
     <Box
@@ -53,6 +63,7 @@ function Hero() {
           <Button
             component="a"
             href="#sale"
+            onClick={scrollToSale}
             variant="contained"
             sx={{
               backgroundColor: "#0D50FF",
