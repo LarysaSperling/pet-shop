@@ -54,7 +54,7 @@ function Footer() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "40px" },
+                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "32px", lg: "40px" },
                   lineHeight: "110%",
                   color: "#282828",
                 }}
@@ -144,7 +144,7 @@ function Footer() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "40px" },
+                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "32px", lg: "40px" },
                   lineHeight: "110%",
                   color: "#282828",
                 }}
@@ -177,7 +177,7 @@ function Footer() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "40px" },
+                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "32px", lg: "40px" },
                   lineHeight: "110%",
                   color: "#282828",
                 }}
