@@ -1,9 +1,10 @@
 import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
+import { mobile } from "../../theme/mobile";
 
 // Crumbs wrap to a new line on narrow screens.
 // A very long last crumb (e.g. product title) is shortened with "…".
-function Breadcrumbs({ items, mb = "40px" }) {
+function Breadcrumbs({ items, mb = mobile("20px", "40px") }) {
   return (
     <Box
       component="nav"

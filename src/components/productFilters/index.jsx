@@ -8,11 +8,12 @@ import {
   OutlinedInput,
 } from "@mui/material";
 import { SORT_OPTIONS } from "../../hooks/useProductFilters";
+import { MOBILE, mobile } from "../../theme/mobile";
 
 const labelSx = {
   fontFamily: "Montserrat, sans-serif",
   fontWeight: 600,
-  fontSize: "20px",
+  fontSize: mobile(MOBILE.body, "20px"),
   lineHeight: "130%",
   color: "#282828",
 };
@@ -74,12 +75,12 @@ function ProductFilters({
   };
 
   return (
-    <Box sx={{ mb: "40px" }}>
+    <Box sx={{ mb: mobile("24px", "40px") }}>
       <Box
         sx={{
           display: "flex",
           flexWrap: "wrap",
-          gap: { xs: "16px", md: "24px 40px" },
+          gap: { xs: "12px", sm: "16px", md: "24px 40px" },
           alignItems: "center",
         }}
       >

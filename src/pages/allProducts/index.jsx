@@ -8,6 +8,7 @@ import Breadcrumbs from "../../components/breadcrumbs";
 import ProductFilters from "../../components/productFilters";
 import ProductGrid from "../../components/productGrid";
 import useProductFilters from "../../hooks/useProductFilters";
+import { MOBILE, PAGE_SPACING, mobile } from "../../theme/mobile";
 
 function AllProducts() {
   const dispatch = useDispatch();
@@ -30,7 +31,7 @@ function AllProducts() {
 
   if (status === "loading") {
     return (
-      <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+      <LayoutContainer sx={PAGE_SPACING}>
         <LoadingMessage />
       </LayoutContainer>
     );
@@ -38,14 +39,14 @@ function AllProducts() {
 
   if (status === "failed") {
     return (
-      <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+      <LayoutContainer sx={PAGE_SPACING}>
         <Typography color="error">{error}</Typography>
       </LayoutContainer>
     );
   }
 
   return (
-    <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+    <LayoutContainer sx={PAGE_SPACING}>
       <Breadcrumbs
         items={[
           { label: "Main page", to: "/" },
@@ -58,10 +59,10 @@ function AllProducts() {
         sx={{
           fontFamily: "Montserrat, sans-serif",
           fontWeight: 700,
-          fontSize: { xs: "40px", md: "64px" },
+          fontSize: mobile(MOBILE.h1, { xs: "40px", md: "64px" }),
           lineHeight: "110%",
           color: "#282828",
-          mb: "40px",
+          mb: mobile(MOBILE.titleGap, "40px"),
         }}
       >
         All products

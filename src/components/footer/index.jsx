@@ -3,20 +3,21 @@ import Section from "../section";
 import LayoutContainer from "../layoutContainer";
 import instagramIcon from "../../assets/icons/instagram.svg";
 import whatsappIcon from "../../assets/icons/whatsapp.svg";
+import { MOBILE, mobile } from "../../theme/mobile";
 
 function Footer() {
   return (
-    <Section sx={{ mt: "80px", mb: "40px" }}>
+    <Section sx={{ mt: mobile("48px", "80px"), mb: mobile("24px", "40px") }}>
       <LayoutContainer>
         <Box>
           <Typography
             sx={{
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 700,
-              fontSize: { xs: "40px", md: "64px" },
+              fontSize: mobile(MOBILE.h2, { xs: "40px", md: "64px" }),
               lineHeight: "110%",
               color: "#282828",
-              mb: "40px",
+              mb: mobile(MOBILE.titleGap, "40px"),
             }}
           >
             Contact
@@ -26,25 +27,25 @@ function Footer() {
             sx={{
               display: "grid",
               gridTemplateColumns: { xs: "1fr", md: "repeat(2, 1fr)" },
-              gap: "32px",
-              mb: "32px",
+              gap: mobile("12px", "32px"),
+              mb: mobile("12px", "32px"),
             }}
           >
             <Box
               sx={{
                 backgroundColor: "#F1F3F4",
                 borderRadius: "12px",
-                p: { xs: "24px", sm: "32px" },
+                p: mobile(MOBILE.blockPadding, "32px"),
               }}
             >
               <Typography
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 500,
-                  fontSize: "20px",
+                  fontSize: mobile(MOBILE.body, "20px"),
                   lineHeight: "130%",
                   color: "#8B8B8B",
-                  mb: "16px",
+                  mb: mobile("8px", "16px"),
                 }}
               >
                 Phone
@@ -54,7 +55,7 @@ function Footer() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "32px", lg: "40px" },
+                  fontSize: mobile(MOBILE.h3, { sm: "32px", md: "32px", lg: "40px" }),
                   lineHeight: "110%",
                   color: "#282828",
                 }}
@@ -71,17 +72,17 @@ function Footer() {
               sx={{
                 backgroundColor: "#F1F3F4",
                 borderRadius: "12px",
-                p: { xs: "24px", sm: "32px" },
+                p: mobile(MOBILE.blockPadding, "32px"),
               }}
             >
               <Typography
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 500,
-                  fontSize: "20px",
+                  fontSize: mobile(MOBILE.body, "20px"),
                   lineHeight: "130%",
                   color: "#8B8B8B",
-                  mb: "16px",
+                  mb: mobile("8px", "16px"),
                 }}
               >
                 Socials
@@ -124,17 +125,17 @@ function Footer() {
               sx={{
                 backgroundColor: "#F1F3F4",
                 borderRadius: "12px",
-                p: { xs: "24px", sm: "32px" },
+                p: mobile(MOBILE.blockPadding, "32px"),
               }}
             >
               <Typography
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 500,
-                  fontSize: "20px",
+                  fontSize: mobile(MOBILE.body, "20px"),
                   lineHeight: "130%",
                   color: "#8B8B8B",
-                  mb: "16px",
+                  mb: mobile("8px", "16px"),
                 }}
               >
                 Address
@@ -144,7 +145,7 @@ function Footer() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "32px", lg: "40px" },
+                  fontSize: mobile(MOBILE.h3, { sm: "32px", md: "32px", lg: "40px" }),
                   lineHeight: "110%",
                   color: "#282828",
                 }}
@@ -157,17 +158,17 @@ function Footer() {
               sx={{
                 backgroundColor: "#F1F3F4",
                 borderRadius: "12px",
-                p: { xs: "24px", sm: "32px" },
+                p: mobile(MOBILE.blockPadding, "32px"),
               }}
             >
               <Typography
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 500,
-                  fontSize: "20px",
+                  fontSize: mobile(MOBILE.body, "20px"),
                   lineHeight: "130%",
                   color: "#8B8B8B",
-                  mb: "16px",
+                  mb: mobile("8px", "16px"),
                 }}
               >
                 Working Hours
@@ -177,7 +178,7 @@ function Footer() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: { xs: "clamp(20px, 6.5vw, 32px)", md: "32px", lg: "40px" },
+                  fontSize: mobile(MOBILE.h3, { sm: "32px", md: "32px", lg: "40px" }),
                   lineHeight: "110%",
                   color: "#282828",
                 }}
@@ -191,7 +192,7 @@ function Footer() {
             sx={{
               borderRadius: "12px",
               overflow: "hidden",
-              height: { xs: "300px", md: "350px" },
+              height: mobile("240px", { xs: "300px", md: "350px" }),
             }}
           >
             <Box

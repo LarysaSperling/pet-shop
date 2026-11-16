@@ -7,6 +7,7 @@ import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import LoadingMessage from "../../components/loadingMessage";
 import FallbackImage from "../../components/fallbackImage";
+import { MOBILE, PAGE_SPACING, mobile } from "../../theme/mobile";
 
 function CategoriesPage() {
   const dispatch = useDispatch();
@@ -19,8 +20,8 @@ function CategoriesPage() {
   }, [dispatch, status]);
 
   return (
-    <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
-      <Box sx={{ mb: "40px" }}>
+    <LayoutContainer sx={PAGE_SPACING}>
+      <Box sx={{ mb: mobile("0px", "40px") }}>
         <Breadcrumbs
           items={[
             { label: "Main page", to: "/" },
@@ -32,10 +33,10 @@ function CategoriesPage() {
           sx={{
             fontFamily: "Montserrat, sans-serif",
             fontWeight: 700,
-            fontSize: { xs: "40px", md: "64px" },
+            fontSize: mobile(MOBILE.h1, { xs: "40px", md: "64px" }),
             lineHeight: "110%",
             color: "#282828",
-            mb: "40px",
+            mb: mobile(MOBILE.titleGap, "40px"),
           }}
         >
           Categories
@@ -55,11 +56,12 @@ function CategoriesPage() {
           sx={{
             display: "grid",
             gridTemplateColumns: {
-              xs: "1fr",
+              // phones: 2 small cards per row instead of 1 huge card
+              xs: "repeat(2, minmax(0, 1fr))",
               sm: "repeat(2, 1fr)",
               md: "repeat(4, 1fr)",
             },
-            gap: "32px",
+            gap: mobile("16px 12px", "32px"),
           }}
         >
           {items.map((category) => (
@@ -77,11 +79,12 @@ function CategoriesPage() {
                 alt={category.title}
                 sx={{
                   width: "100%",
-                  height: "350px",
+                  height: mobile("auto", "350px"),
+                  aspectRatio: mobile("316 / 350", "auto"),
                   objectFit: "cover",
                   borderRadius: "12px",
                   display: "block",
-                  mb: "16px",
+                  mb: mobile("8px", "16px"),
                   transition: "0.3s ease",
                   "&:hover": {
                     transform: "scale(1.02)",
@@ -93,7 +96,7 @@ function CategoriesPage() {
                 sx={{
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 500,
-                  fontSize: "20px",
+                  fontSize: mobile(MOBILE.small, "20px"),
                   lineHeight: "130%",
                   color: "#282828",
                   textAlign: "center",

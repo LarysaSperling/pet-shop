@@ -13,6 +13,7 @@ import Section from "../section";
 import firstOrderPets from "../../assets/images/first-order-pets.png";
 import { API_URL, API_ENDPOINTS } from "../../constants/api";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import { MOBILE, mobile } from "../../theme/mobile";
 
 function FirstOrder() {
   const [formData, setFormData] = useLocalStorage("discountForm", {
@@ -112,21 +113,21 @@ function FirstOrder() {
   };
 
   const inputSx = {
-    height: "58px",
+    height: mobile(MOBILE.controlHeight, "58px"),
     borderRadius: "8px",
     color: "#FFFFFF",
     fontFamily: "Montserrat, sans-serif",
     fontWeight: 500,
-    fontSize: "20px",
+    fontSize: mobile(MOBILE.body, "20px"),
     lineHeight: "130%",
     backgroundColor: "transparent",
     "& input": {
       color: "#FFFFFF",
       WebkitTextFillColor: "#FFFFFF",
-      padding: "16px",
+      padding: mobile("12px 16px", "16px"),
       fontFamily: "Montserrat, sans-serif",
       fontWeight: 500,
-      fontSize: "20px",
+      fontSize: mobile(MOBILE.body, "20px"),
       lineHeight: "130%",
       backgroundColor: "transparent",
       caretColor: "#FFFFFF",
@@ -180,6 +181,8 @@ function FirstOrder() {
       sx={{
         maxWidth: "1440px",
         margin: "0 auto",
+        // phones: the blue block does not touch the screen edges
+        px: mobile(MOBILE.gutter, 0),
       }}
     >
       <Box
@@ -187,7 +190,7 @@ function FirstOrder() {
           background:
           "linear-gradient(90deg, #0D50FF 0%, #2451C6 100%)",
           borderRadius: "12px",
-          pt: { xs: "24px", md: "32px" },
+          pt: mobile("20px", { xs: "24px", md: "32px" }),
           overflow: "hidden",
         }}
       >
@@ -195,11 +198,11 @@ function FirstOrder() {
           <Typography
             sx={{
               margin: 0,
-              marginBottom: { xs: "24px", md: "32px" },
+              marginBottom: mobile("16px", { xs: "24px", md: "32px" }),
               textAlign: "center",
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 700,
-              fontSize: { xs: "40px", md: "64px" },
+              fontSize: mobile(MOBILE.h2, { xs: "40px", md: "64px" }),
               lineHeight: "110%",
               color: "#FFFFFF",
             }}
@@ -212,7 +215,7 @@ function FirstOrder() {
               display: "grid",
               gridTemplateColumns: { xs: "1fr", md: "1fr 516px" },
               alignItems: "end",
-              gap: { xs: "24px", md: "32px" },
+              gap: mobile("16px", { xs: "24px", md: "32px" }),
             }}
           >
             <Box
@@ -241,8 +244,8 @@ function FirstOrder() {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: "16px",
-                pb: { xs: "24px", md: "32px" },
+                gap: mobile("12px", "16px"),
+                pb: mobile("20px", { xs: "24px", md: "32px" }),
                 width: "100%",
                 maxWidth: "516px",
                 justifySelf: "end",
@@ -304,14 +307,14 @@ function FirstOrder() {
                 disabled={submitted || isSending}
                 variant="contained"
                 sx={{
-                  height: "58px",
+                  height: mobile(MOBILE.controlHeight, "58px"),
                   borderRadius: "8px",
                   backgroundColor: "#FFFFFF",
                   color: submitted ? "#0D50FF" : "#282828",
                   textTransform: "none",
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: "20px",
+                  fontSize: mobile(MOBILE.buttonFont, "20px"),
                   lineHeight: "130%",
                   boxShadow: "none",
                   "&:hover": {

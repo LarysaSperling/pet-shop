@@ -11,6 +11,7 @@ import useProductFilters, {
   SORT_OPTIONS,
   DISCOUNT_SORT_OPTION,
 } from "../../hooks/useProductFilters";
+import { MOBILE, PAGE_SPACING, mobile } from "../../theme/mobile";
 
 const SALES_SORT_OPTIONS = [...SORT_OPTIONS, DISCOUNT_SORT_OPTION];
 
@@ -40,7 +41,7 @@ function AllSales() {
 
   if (status === "loading") {
     return (
-      <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+      <LayoutContainer sx={PAGE_SPACING}>
         <LoadingMessage text="Loading sale products..." />
       </LayoutContainer>
     );
@@ -48,7 +49,7 @@ function AllSales() {
 
   if (status === "failed") {
     return (
-      <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+      <LayoutContainer sx={PAGE_SPACING}>
         <Typography color="error">
           Failed to load sale products: {error}
         </Typography>
@@ -57,7 +58,7 @@ function AllSales() {
   }
 
   return (
-    <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+    <LayoutContainer sx={PAGE_SPACING}>
       <Breadcrumbs
         items={[
           { label: "Main page", to: "/" },
@@ -70,10 +71,10 @@ function AllSales() {
         sx={{
           fontFamily: "Montserrat, sans-serif",
           fontWeight: 700,
-          fontSize: { xs: "40px", md: "64px" },
+          fontSize: mobile(MOBILE.h1, { xs: "40px", md: "64px" }),
           lineHeight: "110%",
           color: "#282828",
-          mb: "40px",
+          mb: mobile(MOBILE.titleGap, "40px"),
         }}
       >
         Discounted items

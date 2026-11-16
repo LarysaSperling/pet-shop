@@ -2,10 +2,16 @@ import { Box, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import errorImg from "../../assets/images/404.png";
 import LayoutContainer from "../../components/layoutContainer";
+import { MOBILE, mobile } from "../../theme/mobile";
 
 function ErrorPage() {
   return (
-    <LayoutContainer sx={{ mt: { xs: "24px", md: "40px" }, mb: "80px" }}>
+    <LayoutContainer
+      sx={{
+        mt: { xs: MOBILE.pageTop, md: "40px" },
+        mb: mobile(MOBILE.pageBottom, "80px"),
+      }}
+    >
       <Box
         sx={{
           display: "flex",
@@ -30,7 +36,7 @@ function ErrorPage() {
           sx={{
             fontFamily: "Montserrat, sans-serif",
             fontWeight: 700,
-            fontSize: { xs: "28px", sm: "40px", md: "64px" },
+            fontSize: mobile(MOBILE.h1, { sm: "40px", md: "64px" }),
             lineHeight: "110%",
             color: "#282828",
             mb: { xs: "12px", md: "16px" },

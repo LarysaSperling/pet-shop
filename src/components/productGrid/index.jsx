@@ -1,5 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import ProductCard from "../productCard";
+import { MOBILE, mobile } from "../../theme/mobile";
 
 /**
  * Grid of product cards. When the list is empty it shows a message
@@ -14,7 +15,7 @@ function ProductGrid({ products, onResetFilters }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
-          gap: "24px",
+          gap: mobile("16px", "24px"),
           py: "24px",
         }}
       >
@@ -22,7 +23,7 @@ function ProductGrid({ products, onResetFilters }) {
           sx={{
             fontFamily: "Montserrat, sans-serif",
             fontWeight: 500,
-            fontSize: "20px",
+            fontSize: mobile(MOBILE.body, "20px"),
             lineHeight: "130%",
             color: "#8B8B8B",
           }}
@@ -34,7 +35,7 @@ function ProductGrid({ products, onResetFilters }) {
           <Button
             onClick={onResetFilters}
             sx={{
-              height: "48px",
+              height: MOBILE.controlHeight,
               px: "32px",
               borderRadius: "8px",
               backgroundColor: "#0D50FF",
@@ -42,7 +43,7 @@ function ProductGrid({ products, onResetFilters }) {
               textTransform: "none",
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 600,
-              fontSize: "18px",
+              fontSize: mobile(MOBILE.buttonFont, "18px"),
               boxShadow: "none",
               "&:hover": {
                 backgroundColor: "#282828",
@@ -66,7 +67,7 @@ function ProductGrid({ products, onResetFilters }) {
           sm: "repeat(2, 1fr)",
           md: "repeat(4, 1fr)",
         },
-        gap: "32px",
+        gap: mobile("20px", "32px"),
       }}
     >
       {products.map((product) => (
