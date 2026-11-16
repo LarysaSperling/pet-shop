@@ -1,5 +1,16 @@
 import { Box, Typography, Button } from "@mui/material";
 import heroImg from "../../assets/images/hero.jpg";
+import { MOBILE, mobile } from "../../theme/mobile";
+
+// Smoothly scrolls to the sale section (instant if the user prefers reduced motion)
+function scrollToSale(event) {
+  const sale = document.getElementById("sale");
+  if (!sale) return; // fall back to the normal "#sale" link
+
+  event.preventDefault();
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  sale.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+}
 
 function Hero() {
   return (
@@ -19,7 +30,7 @@ function Hero() {
           position: "relative",
           display: "flex",
           alignItems: "flex-start",
-          pt: { xs: "40px", md: "40px" },
+          pt: mobile("8px", "40px"),
           color: "#fff",
           overflow: "hidden",
         }}
@@ -28,18 +39,20 @@ function Hero() {
           sx={{
             position: "relative",
             maxWidth: "1360px",
-            py: "40px",
-            pl: "40px",
+            py: mobile("24px", "40px"),
+            // phones: same side padding as the rest of the page
+            px: mobile(MOBILE.gutter, 0),
+            pl: mobile(MOBILE.gutter, "40px"),
           }}
         >
           <Typography
             sx={{
               fontFamily: "Montserrat, sans-serif",
-              fontSize: { xs: "40px", sm: "56px", md: "72px", lg: "96px" },
+              fontSize: mobile(MOBILE.hero, { sm: "56px", md: "72px", lg: "96px" }),
               fontWeight: 700,
               lineHeight: "110%",
               textAlign: "left",
-              mb: "40px",
+              mb: mobile("24px", "40px"),
             }}
           >
             Amazing Discounts
@@ -50,16 +63,17 @@ function Hero() {
           <Button
             component="a"
             href="#sale"
+            onClick={scrollToSale}
             variant="contained"
             sx={{
               backgroundColor: "#0D50FF",
               textTransform: "none",
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 600,
-              fontSize: "20px",
+              fontSize: mobile(MOBILE.buttonFont, "20px"),
               lineHeight: "130%",
-              px: "56px",
-              py: "16px",
+              px: mobile("32px", "56px"),
+              py: mobile("12px", "16px"),
               borderRadius: "8px",
               boxShadow: "none",
               "&:hover": {

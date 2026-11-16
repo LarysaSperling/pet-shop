@@ -2,7 +2,8 @@ import { Box, Typography, Button } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/slices/cartSlice";
-import { API_URL } from "../../constants/api";
+import FallbackImage from "../fallbackImage";
+import { MOBILE, mobile } from "../../theme/mobile";
 
 function ProductCard({ product }) {
   const dispatch = useDispatch();
@@ -59,14 +60,13 @@ function ProductCard({ product }) {
       }}
     >
       <Box sx={{ position: "relative" }}>
-        <Box
-          component="img"
-          src={`${API_URL}/${product.image}`}
+        <FallbackImage
+          path={product.image}
           alt={product.title}
           sx={{
             width: "100%",
             height: {
-              xs: "240px",
+              xs: "clamp(180px, 56vw, 240px)",
               sm: "250px",
               md: "260px",
               lg: "284px",
@@ -150,10 +150,10 @@ function ProductCard({ product }) {
           sx={{
             fontFamily: "Montserrat, sans-serif",
             fontWeight: 500,
-            fontSize: { xs: "18px", sm: "20px" },
+            fontSize: mobile(MOBILE.body, "20px"),
             lineHeight: "130%",
             color: "#282828",
-            minHeight: { xs: "46px", sm: "52px" },
+            minHeight: mobile("42px", "52px"),
             overflow: "hidden",
             display: "-webkit-box",
             WebkitLineClamp: 2,
@@ -175,7 +175,7 @@ function ProductCard({ product }) {
             sx={{
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 600,
-              fontSize: { xs: "32px", sm: "36px", lg: "40px" },
+              fontSize: mobile(MOBILE.price, { sm: "36px", lg: "40px" }),
               lineHeight: "110%",
               color: "#282828",
             }}
@@ -188,7 +188,7 @@ function ProductCard({ product }) {
               sx={{
                 fontFamily: "Montserrat, sans-serif",
                 fontWeight: 500,
-                fontSize: { xs: "18px", sm: "20px" },
+                fontSize: mobile(MOBILE.oldPrice, "20px"),
                 lineHeight: "130%",
                 color: "#8B8B8B",
                 textDecoration: "line-through",

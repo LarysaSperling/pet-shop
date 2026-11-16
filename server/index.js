@@ -23,9 +23,18 @@ app.get("/", (req, res) => {
 
 app.use(express.static("public"));
 
+// Allowed frontend origins, comma-separated in CORS_ORIGINS (see .env.example)
+const allowedOrigins = (
+  process.env.CORS_ORIGINS ||
+  "https://pet-shop-roan-five.vercel.app,http://localhost:5173"
+)
+  .split(",")
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: "https://pet-shop-roan-five.vercel.app"
+    origin: allowedOrigins,
   })
 );
 

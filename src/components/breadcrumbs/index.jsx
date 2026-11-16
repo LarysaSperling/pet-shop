@@ -1,49 +1,57 @@
 import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
+import { mobile } from "../../theme/mobile";
 
-function Breadcrumbs({ items, mb = "40px" }) {
+// Crumbs wrap to a new line on narrow screens.
+// A very long last crumb (e.g. product title) is shortened with "…".
+function Breadcrumbs({ items, mb = mobile("20px", "40px") }) {
   return (
     <Box
+      component="nav"
+      aria-label="Breadcrumb"
       sx={{
-        overflowX: "auto",
+        display: "flex",
+        flexWrap: "wrap",
+        alignItems: "center",
+        rowGap: "8px",
         mb,
-        "&::-webkit-scrollbar": {
-          display: "none",
-        },
-        scrollbarWidth: "none",
       }}
     >
-      <Box
-        sx={{
-          display: "inline-flex",
-          alignItems: "center",
-          minWidth: "max-content",
-        }}
-      >
-        {items.map((item, index) => {
-          const isLast = index === items.length - 1;
+      {items.map((item, index) => {
+        const isLast = index === items.length - 1;
 
-          return (
-            <Box
-              key={index}
-              sx={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {item.to && !isLast ? (
-                <Box component={Link} to={item.to} sx={btnStyle}>
+        return (
+          <Box
+            key={index}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              minWidth: 0,
+              maxWidth: "100%",
+            }}
+          >
+            {index > 0 && <Box sx={separatorStyle} />}
+
+            {item.to && !isLast ? (
+              <Box component={Link} to={item.to} sx={btnStyle}>
+                <Box component="span" sx={textStyle}>
                   {item.label}
                 </Box>
-              ) : (
-                <Box sx={activeStyle}>{item.label}</Box>
-              )}
-
-              {!isLast && <Box sx={separatorStyle} />}
-            </Box>
-          );
-        })}
-      </Box>
+              </Box>
+            ) : (
+              <Box
+                sx={activeStyle}
+                aria-current={isLast ? "page" : undefined}
+                title={item.label}
+              >
+                <Box component="span" sx={textStyle}>
+                  {item.label}
+                </Box>
+              </Box>
+            )}
+          </Box>
+        );
+      })}
     </Box>
   );
 }
@@ -54,14 +62,20 @@ const commonStyle = {
   borderRadius: "6px",
   display: "flex",
   alignItems: "center",
-  justifyContent: "center",
   fontFamily: "Montserrat, sans-serif",
   fontSize: { xs: "14px", sm: "16px" },
   fontWeight: 500,
   lineHeight: "126%",
-  whiteSpace: "nowrap",
   margin: 0,
-  flexShrink: 0,
+  minWidth: 0,
+  maxWidth: "100%",
+  boxSizing: "border-box",
+};
+
+const textStyle = {
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
 };
 
 const btnStyle = {

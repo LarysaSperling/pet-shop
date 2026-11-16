@@ -9,6 +9,5 @@ body {
   box-sizing: border-box;
   font-family: 'Montserrat', sans-serif;
 }
-html {
-  scroll-behavior: smooth;
-}
+/* No global smooth scrolling: page changes must jump to the top instantly.
+   Smooth scrolling is used only for the hero "Check out" button. */

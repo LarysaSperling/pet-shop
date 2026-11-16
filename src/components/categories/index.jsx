@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchCategories } from "../../redux/slices/categoriesSlice";
+import LoadingMessage from "../loadingMessage";
 import LayoutContainer from "../layoutContainer";
 import Section from "../section";
-import { API_URL } from "../../constants/api";
+import FallbackImage from "../fallbackImage";
+import { MOBILE, mobile } from "../../theme/mobile";
 
 function Categories() {
   const dispatch = useDispatch();
@@ -21,7 +23,7 @@ function Categories() {
     return (
       <Section>
         <LayoutContainer>
-          <Typography>Loading categories...</Typography>
+          <LoadingMessage text="Loading categories..." />
         </LayoutContainer>
       </Section>
     );
@@ -58,15 +60,15 @@ function Categories() {
               display: "flex",
               flexDirection: { xs: "column", sm: "row" },
               alignItems: { xs: "stretch", sm: "center" },
-              gap: { xs: "16px", sm: "20px", md: "32px" },
-              mb: { xs: "24px", sm: "32px", md: "40px" },
+              gap: { xs: "12px", sm: "20px", md: "32px" },
+              mb: { xs: MOBILE.titleGap, sm: "32px", md: "40px" },
             }}
           >
             <Typography
               sx={{
                 fontFamily: "Montserrat, sans-serif",
                 fontWeight: 700,
-                fontSize: { xs: "32px", sm: "40px", md: "64px" },
+                fontSize: mobile(MOBILE.h2, { sm: "40px", md: "64px" }),
                 lineHeight: "110%",
                 color: "#282828",
                 whiteSpace: { xs: "normal", sm: "nowrap" },
@@ -117,11 +119,12 @@ function Categories() {
             sx={{
               display: "grid",
               gridTemplateColumns: {
-                xs: "1fr",
+                // phones: 2 small cards per row instead of 1 huge card
+                xs: "repeat(2, minmax(0, 1fr))",
                 sm: "repeat(2, 1fr)",
                 lg: "repeat(4, 1fr)",
               },
-              gap: { xs: "20px", sm: "24px", lg: "32px" },
+              gap: { xs: "16px 12px", sm: "24px", lg: "32px" },
             }}
           >
             {items.slice(0, 4).map((category) => (
@@ -139,9 +142,8 @@ function Categories() {
                   },
                 }}
               >
-                <Box
-                  component="img"
-                  src={`${API_URL}/${category.image}`}
+                <FallbackImage
+                  path={category.image}
                   alt={category.title}
                   sx={{
                     width: "100%",
@@ -149,7 +151,7 @@ function Categories() {
                     objectFit: "cover",
                     borderRadius: "12px",
                     display: "block",
-                    mb: { xs: "12px", sm: "16px" },
+                    mb: { xs: "8px", sm: "16px" },
                     transition: "0.3s ease",
                   }}
                 />
@@ -158,7 +160,7 @@ function Categories() {
                   sx={{
                     fontFamily: "Montserrat, sans-serif",
                     fontWeight: 500,
-                    fontSize: { xs: "18px", sm: "20px" },
+                    fontSize: mobile(MOBILE.small, "20px"),
                     lineHeight: "130%",
                     color: "#282828",
                     textAlign: "center",

@@ -4,24 +4,43 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../redux/slices/cartSlice";
+import { fetchProducts } from "../../redux/slices/productsSlice";
+import LoadingMessage from "../../components/loadingMessage";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
 import { API_URL, API_ENDPOINTS } from "../../constants/api";
+import FallbackImage from "../../components/fallbackImage";
+import { MOBILE, PAGE_SPACING, mobile } from "../../theme/mobile";
 
 function ProductPage() {
   const { id } = useParams();
   const dispatch = useDispatch();
   const cartItems = useSelector((state) => state.cart.items);
 
-  const [product, setProduct] = useState(null);
-  const [status, setStatus] = useState("idle");
-  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+  // If the product list is already in Redux, show the product right away.
+  // Then the page has its full height at once, so the browser "Back" button
+  // can restore the scroll position (and there is no "Loading..." flash).
+  const cachedProduct = useSelector((state) =>
+    state.products.items.find((item) => String(item.id) === String(id))
+  );
+
+  // Fill the shared product list once (the thunk skips the request if it is loaded)
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
+
+  // Result of the last request: { id, product, failed }
+  const [loaded, setLoaded] = useState({ id: null, product: null, failed: false });
+  // "Read more" is open only for the product it was opened on
+  const [expandedId, setExpandedId] = useState(null);
+  const isDescriptionExpanded = expandedId === id;
 
   useEffect(() => {
+    // Ignore an old response if the user already opened another product
+    let ignore = false;
+
     async function loadProduct() {
       try {
-        setStatus("loading");
-
         const response = await axios.get(
           `${API_URL}${API_ENDPOINTS.PRODUCTS}/${id}`
         );
@@ -30,29 +49,35 @@ function ProductPage() {
           ? response.data[0]
           : response.data;
 
-        setProduct(productData);
-        setIsDescriptionExpanded(false);
-        setStatus("succeeded");
+        if (!ignore) setLoaded({ id, product: productData, failed: false });
       } catch (error) {
         console.error("Failed to load product:", error);
-        setStatus("failed");
+        if (!ignore) setLoaded({ id, product: null, failed: true });
       }
     }
 
     loadProduct();
+
+    return () => {
+      ignore = true;
+    };
   }, [id]);
 
-  if (status === "loading") {
+  const isLoadedForThisId = loaded.id === id;
+  const product = (isLoadedForThisId && loaded.product) || cachedProduct || null;
+  const isFailed = isLoadedForThisId && loaded.failed;
+
+  if (!product && !isFailed) {
     return (
-      <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
-        <Typography>Loading...</Typography>
+      <LayoutContainer sx={PAGE_SPACING}>
+        <LoadingMessage />
       </LayoutContainer>
     );
   }
 
-  if (status === "failed" || !product) {
+  if (!product) {
     return (
-      <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+      <LayoutContainer sx={PAGE_SPACING}>
         <Typography color="error">Product not found.</Typography>
       </LayoutContainer>
     );
@@ -83,7 +108,7 @@ function ProductPage() {
     product.description && product.description.length > 180;
 
   return (
-    <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+    <LayoutContainer sx={PAGE_SPACING}>
       <Breadcrumbs
         items={[
           { label: "Main page", to: "/" },
@@ -95,7 +120,7 @@ function ProductPage() {
       <Box
         sx={{
           display: "flex",
-          gap: { xs: "24px", md: "32px" },
+          gap: mobile("20px", { xs: "24px", md: "32px" }),
           alignItems: "flex-start",
           flexWrap: { xs: "wrap", md: "nowrap" },
         }}
@@ -110,17 +135,16 @@ function ProductPage() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            minHeight: { xs: "320px", sm: "420px", md: "520px" },
+            minHeight: mobile("clamp(220px, 70vw, 320px)", { sm: "420px", md: "520px" }),
           }}
         >
-          <Box
-            component="img"
-            src={`${API_URL}/${product.image}`}
+          <FallbackImage
+            path={product.image}
             alt={product.title}
             sx={{
               width: "100%",
               height: "100%",
-              maxHeight: { xs: "420px", md: "520px" },
+              maxHeight: mobile("320px", { xs: "420px", md: "520px" }),
               objectFit: "contain",
               display: "block",
             }}
@@ -137,10 +161,10 @@ function ProductPage() {
             sx={{
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 700,
-              fontSize: { xs: "32px", md: "40px" },
+              fontSize: mobile(MOBILE.h2, { xs: "32px", md: "40px" }),
               lineHeight: "110%",
               color: "#282828",
-              mb: "32px",
+              mb: mobile("16px", "32px"),
               wordBreak: "break-word",
             }}
           >
@@ -151,16 +175,16 @@ function ProductPage() {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: "16px",
+              gap: mobile("12px", "16px"),
               flexWrap: "wrap",
-              mb: "32px",
+              mb: mobile("20px", "32px"),
             }}
           >
             <Typography
               sx={{
                 fontFamily: "Montserrat, sans-serif",
                 fontWeight: 700,
-                fontSize: { xs: "48px", md: "64px" },
+                fontSize: mobile(MOBILE.priceLarge, { xs: "48px", md: "64px" }),
                 lineHeight: "110%",
                 color: "#282828",
               }}
@@ -174,7 +198,7 @@ function ProductPage() {
                   sx={{
                     fontFamily: "Montserrat, sans-serif",
                     fontWeight: 500,
-                    fontSize: { xs: "28px", md: "40px" },
+                    fontSize: mobile(MOBILE.subtitle, { xs: "28px", md: "40px" }),
                     lineHeight: "130%",
                     color: "#8B8B8B",
                     textDecoration: "line-through",
@@ -192,7 +216,7 @@ function ProductPage() {
                     py: "4px",
                     fontFamily: "Montserrat, sans-serif",
                     fontWeight: 600,
-                    fontSize: "20px",
+                    fontSize: mobile(MOBILE.body, "20px"),
                     lineHeight: "130%",
                   }}
                 >
@@ -202,20 +226,20 @@ function ProductPage() {
             )}
           </Box>
 
-          <Box sx={{ mb: "32px" }}>
+          <Box sx={{ mb: mobile("24px", "32px") }}>
             {!isAdded ? (
               <Button
                 onClick={handleAdd}
                 sx={{
                   width: { xs: "100%", sm: "316px" },
-                  height: "58px",
+                  height: mobile(MOBILE.controlHeight, "58px"),
                   borderRadius: "8px",
                   backgroundColor: "#0D50FF",
                   color: "#FFFFFF",
                   textTransform: "none",
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: "20px",
+                  fontSize: mobile(MOBILE.buttonFont, "20px"),
                   lineHeight: "130%",
                   boxShadow: "none",
                   "&:hover": {
@@ -231,7 +255,7 @@ function ProductPage() {
                 disabled
                 sx={{
                   width: { xs: "100%", sm: "316px" },
-                  height: "58px",
+                  height: mobile(MOBILE.controlHeight, "58px"),
                   borderRadius: "8px",
                   backgroundColor: "#FFFFFF",
                   color: "#282828",
@@ -239,7 +263,7 @@ function ProductPage() {
                   textTransform: "none",
                   fontFamily: "Montserrat, sans-serif",
                   fontWeight: 600,
-                  fontSize: "20px",
+                  fontSize: mobile(MOBILE.buttonFont, "20px"),
                   lineHeight: "130%",
                   "&.Mui-disabled": {
                     backgroundColor: "#FFFFFF",
@@ -257,10 +281,10 @@ function ProductPage() {
             sx={{
               fontFamily: "Montserrat, sans-serif",
               fontWeight: 600,
-              fontSize: "20px",
+              fontSize: mobile(MOBILE.subtitle, "20px"),
               lineHeight: "130%",
               color: "#282828",
-              mb: "16px",
+              mb: mobile("8px", "16px"),
             }}
           >
             Description
@@ -286,7 +310,7 @@ function ProductPage() {
 
             {shouldShowReadMore && (
               <Typography
-                onClick={() => setIsDescriptionExpanded((prev) => !prev)}
+                onClick={() => setExpandedId(isDescriptionExpanded ? null : id)}
                 sx={{
                   mt: "8px",
                   fontFamily: "Montserrat, sans-serif",

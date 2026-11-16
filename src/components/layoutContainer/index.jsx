@@ -1,5 +1,7 @@
 import { Box } from "@mui/material";
+import { MOBILE, mobile } from "../../theme/mobile";
 
+// Centers page content and gives every page the same side padding
 function LayoutContainer({ children, sx = {} }) {
   return (
     <Box
@@ -7,7 +9,7 @@ function LayoutContainer({ children, sx = {} }) {
         maxWidth: "1360px",
         width: "100%",
         margin: "0 auto",
-        px: { xs: "20px", md: "40px" },
+        px: mobile(MOBILE.gutter, { xs: "20px", md: "40px" }),
         ...sx,
       }}
     >

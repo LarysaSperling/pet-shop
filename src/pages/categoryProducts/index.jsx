@@ -1,123 +1,120 @@
-import {
-  Box,
-  Typography,
-  Checkbox,
-  FormControl,
-  Select,
-  MenuItem,
-  OutlinedInput,
-} from "@mui/material";
+import { Typography } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../../redux/slices/productsSlice";
+import { fetchCategories } from "../../redux/slices/categoriesSlice";
 import axios from "axios";
+import LoadingMessage from "../../components/loadingMessage";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
-import ProductCard from "../../components/productCard";
+import ProductFilters from "../../components/productFilters";
+import ProductGrid from "../../components/productGrid";
 import { API_URL, API_ENDPOINTS } from "../../constants/api";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import useProductFilters from "../../hooks/useProductFilters";
+import { MOBILE, PAGE_SPACING, mobile } from "../../theme/mobile";
+
+// Stable empty array, so filters do not recalculate on every render
+const EMPTY = [];
 
 function CategoryProductsPage() {
   const { id } = useParams();
+  const dispatch = useDispatch();
 
-  const [category, setCategory] = useState(null);
-  const [products, setProducts] = useState([]);
-  const [status, setStatus] = useState("idle");
+  // If products and categories are already in Redux, show the page right away.
+  // Then the page has its full height at once, so the browser "Back" button
+  // can restore the scroll position (and there is no "Loading..." flash).
+  const allProducts = useSelector((state) => state.products.items);
+  const productsStatus = useSelector((state) => state.products.status);
+  const cachedCategory = useSelector((state) =>
+    state.categories.items.find((item) => String(item.id) === String(id))
+  );
+  const cachedProducts = useMemo(
+    () =>
+      productsStatus === "succeeded"
+        ? allProducts.filter((item) => String(item.categoryId) === String(id))
+        : null,
+    [allProducts, productsStatus, id]
+  );
 
-  const [filters, setFilters] = useLocalStorage("categoryFilters", {
-    priceFrom: "",
-    priceTo: "",
-    onlyDiscounted: false,
-    sortType: "default",
+  // Fill the shared lists once (the thunks skip the request if data is already there)
+  useEffect(() => {
+    dispatch(fetchProducts());
+    dispatch(fetchCategories());
+  }, [dispatch]);
+
+  // Result of the last request: { id, category, products, failed }
+  const [loaded, setLoaded] = useState({
+    id: null,
+    category: null,
+    products: [],
+    failed: false,
   });
 
-  const { priceFrom, priceTo, onlyDiscounted, sortType } = filters;
-
   useEffect(() => {
+    // Ignore an old response if the user already opened another category
+    let ignore = false;
+
     async function loadCategoryProducts() {
       try {
-        setStatus("loading");
-
         const response = await axios.get(
           `${API_URL}${API_ENDPOINTS.CATEGORIES}/${id}`
         );
 
-        setCategory(response.data.category);
-        setProducts(response.data.data || []);
-        setStatus("succeeded");
+        if (!ignore) {
+          setLoaded({
+            id,
+            category: response.data.category,
+            products: response.data.data || [],
+            failed: false,
+          });
+        }
       } catch (error) {
         console.error("Failed to load category products:", error);
-        setStatus("failed");
+        if (!ignore) setLoaded({ id, category: null, products: [], failed: true });
       }
     }
 
     loadCategoryProducts();
+
+    return () => {
+      ignore = true;
+    };
   }, [id]);
 
-  const filteredProducts = useMemo(() => {
-    let result = [...products];
+  const isLoadedForThisId = loaded.id === id && !loaded.failed;
+  const hasCache = Boolean(cachedCategory && cachedProducts);
 
-    if (priceFrom) {
-      result = result.filter(
-        (item) => Number(item.discont_price ?? item.price) >= Number(priceFrom)
-      );
-    }
+  const category = isLoadedForThisId ? loaded.category : cachedCategory;
+  const products = isLoadedForThisId ? loaded.products : cachedProducts || EMPTY;
 
-    if (priceTo) {
-      result = result.filter(
-        (item) => Number(item.discont_price ?? item.price) <= Number(priceTo)
-      );
-    }
+  const {
+    filters,
+    filteredProducts,
+    priceError,
+    setFilter,
+    setPrice,
+    resetFilters,
+  } = useProductFilters(products, "categoryFilters");
 
-    if (onlyDiscounted) {
-      result = result.filter(
-        (item) =>
-          item.discont_price !== null &&
-          item.discont_price !== undefined &&
-          Number(item.discont_price) < Number(item.price)
-      );
-    }
-
-    if (sortType === "price-asc") {
-      result.sort(
-        (a, b) =>
-          Number(a.discont_price ?? a.price) -
-          Number(b.discont_price ?? b.price)
-      );
-    }
-
-    if (sortType === "price-desc") {
-      result.sort(
-        (a, b) =>
-          Number(b.discont_price ?? b.price) -
-          Number(a.discont_price ?? a.price)
-      );
-    }
-
-    if (sortType === "title") {
-      result.sort((a, b) => a.title.localeCompare(b.title));
-    }
-
-    return result;
-  }, [products, priceFrom, priceTo, onlyDiscounted, sortType]);
-
-  if (status === "loading") {
+  if (!isLoadedForThisId && !hasCache && !(loaded.id === id && loaded.failed)) {
     return (
-      <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
-        <Typography>Loading...</Typography>
+      <LayoutContainer sx={PAGE_SPACING}>
+        <LoadingMessage />
       </LayoutContainer>
     );
   }
 
-  if (status === "failed") {
+  if (!isLoadedForThisId && !hasCache) {
     return (
-      <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+      <LayoutContainer sx={PAGE_SPACING}>
         <Typography color="error">Failed to load category products.</Typography>
       </LayoutContainer>
     );
   }
 
   return (
-    <LayoutContainer sx={{ mt: "40px", mb: "80px" }}>
+    <LayoutContainer sx={PAGE_SPACING}>
       <Breadcrumbs
         items={[
           { label: "Main page", to: "/" },
@@ -127,170 +124,28 @@ function CategoryProductsPage() {
       />
 
       <Typography
+        component="h1"
         sx={{
           fontFamily: "Montserrat, sans-serif",
           fontWeight: 700,
-          fontSize: { xs: "40px", md: "64px" },
+          fontSize: mobile(MOBILE.h1, { xs: "40px", md: "64px" }),
           lineHeight: "110%",
           color: "#282828",
-          mb: "40px",
+          mb: mobile(MOBILE.titleGap, "40px"),
         }}
       >
         {category?.title}
       </Typography>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "24px",
-          alignItems: "center",
-          mb: "40px",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 600,
-              fontSize: "20px",
-              lineHeight: "130%",
-              color: "#282828",
-            }}
-          >
-            Price
-          </Typography>
+      <ProductFilters
+        idPrefix="category"
+        filters={filters}
+        priceError={priceError}
+        onPriceChange={setPrice}
+        onFilterChange={setFilter}
+      />
 
-          <OutlinedInput
-            id="category-price-from"
-            name="priceFrom"
-            placeholder="from"
-            value={priceFrom}
-            onChange={(e) =>
-              setFilters((prev) => ({
-                ...prev,
-                priceFrom: e.target.value,
-              }))
-            }
-            autoComplete="off"
-            sx={{
-              width: "112px",
-              height: "36px",
-              borderRadius: "6px",
-              fontFamily: "Montserrat, sans-serif",
-              fontSize: "16px",
-            }}
-          />
-
-          <OutlinedInput
-            id="category-price-to"
-            name="priceTo"
-            placeholder="to"
-            value={priceTo}
-            onChange={(e) =>
-              setFilters((prev) => ({
-                ...prev,
-                priceTo: e.target.value,
-              }))
-            }
-            autoComplete="off"
-            sx={{
-              width: "112px",
-              height: "36px",
-              borderRadius: "6px",
-              fontFamily: "Montserrat, sans-serif",
-              fontSize: "16px",
-            }}
-          />
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 600,
-              fontSize: "20px",
-              lineHeight: "130%",
-              color: "#282828",
-            }}
-          >
-            Discounted items
-          </Typography>
-
-          <Checkbox
-            id="category-only-discounted"
-            name="onlyDiscounted"
-            checked={onlyDiscounted}
-            onChange={(e) =>
-              setFilters((prev) => ({
-                ...prev,
-                onlyDiscounted: e.target.checked,
-              }))
-            }
-            slotProps={{
-              input: {
-                "aria-label": "Discounted items only",
-              },
-            }}
-          />
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 600,
-              fontSize: "20px",
-              lineHeight: "130%",
-              color: "#282828",
-            }}
-          >
-            Sorted
-          </Typography>
-
-          <FormControl sx={{ minWidth: "200px" }}>
-            <Select
-              id="category-sort"
-              name="sortType"
-              value={sortType}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  sortType: e.target.value,
-                }))
-              }
-              size="small"
-              sx={{
-                height: "36px",
-                borderRadius: "6px",
-                fontFamily: "Montserrat, sans-serif",
-                fontSize: "16px",
-              }}
-            >
-              <MenuItem value="default">by default</MenuItem>
-              <MenuItem value="price-asc">price: low to high</MenuItem>
-              <MenuItem value="price-desc">price: high to low</MenuItem>
-              <MenuItem value="title">alphabetically</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-      </Box>
-
-      <Box
-        sx={{
-          display: "grid",
-          gridTemplateColumns: {
-            xs: "1fr",
-            sm: "repeat(2, 1fr)",
-            md: "repeat(4, 1fr)",
-          },
-          gap: "32px",
-        }}
-      >
-        {filteredProducts.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </Box>
+      <ProductGrid products={filteredProducts} onResetFilters={resetFilters} />
     </LayoutContainer>
   );
 }

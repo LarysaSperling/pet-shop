@@ -6,6 +6,7 @@ import basketIcon from "../../assets/icons/basket.svg";
 import logoImg from "../../assets/icons/logo.svg";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import { MOBILE, mobile } from "../../theme/mobile";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -37,9 +38,9 @@ function Header() {
             <Toolbar
               disableGutters
               sx={{
-                minHeight: { xs: "72px", md: "128px" },
-                py: { xs: "12px", md: "20px" },
-                px: { xs: "20px", md: 0 },
+                minHeight: mobile("64px", { xs: "72px", md: "128px" }),
+                py: mobile("8px", { xs: "12px", md: "20px" }),
+                px: mobile(MOBILE.gutter, { xs: "20px", md: 0 }),
                 display: "grid",
                 gridTemplateColumns: {
                   xs: "52px 1fr 52px",
@@ -61,11 +62,13 @@ function Header() {
                 <Box sx={{ display: { xs: "flex", sm: "none" } }}>
                   <IconButton
                     onClick={() => setMenuOpen(true)}
+                    aria-label="Open menu"
+                    aria-expanded={menuOpen}
                     sx={{ p: 0, display: "flex", alignItems: "center" }}
                   >
                     <MenuIcon
                       sx={{
-                        fontSize: { xs: 38, sm: 42 },
+                        fontSize: { xs: 32, sm: 42 },
                         color: "#282828",
                       }}
                     />
@@ -101,8 +104,8 @@ function Header() {
                       src={logoImg}
                       alt="logo"
                       sx={{
-                        width: "56px",
-                        height: "56px",
+                        width: mobile("48px", "56px"),
+                        height: mobile("48px", "56px"),
                       }}
                     />
                   </Link>
@@ -165,8 +168,8 @@ function Header() {
                     src={basketIcon}
                     alt="cart"
                     sx={{
-                      width: { xs: "46px", md: "48px" },
-                      height: { xs: "46px", md: "48px" },
+                      width: mobile("40px", { xs: "46px", md: "48px" }),
+                      height: mobile("40px", { xs: "46px", md: "48px" }),
                     }}
                   />
 
@@ -203,6 +206,8 @@ function Header() {
         anchor="left"
         open={menuOpen}
         onClose={() => setMenuOpen(false)}
+        // Header has zIndex 1300, so the menu must be above it
+        sx={{ zIndex: 1400 }}
         slotProps={{
           paper: {
             sx: {
@@ -214,7 +219,7 @@ function Header() {
         }}
       >
         <Box sx={{ display: "flex", justifyContent: "flex-end", mb: "24px" }}>
-          <IconButton onClick={() => setMenuOpen(false)}>
+          <IconButton onClick={() => setMenuOpen(false)} aria-label="Close menu">
             <CloseIcon />
           </IconButton>
         </Box>

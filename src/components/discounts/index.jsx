@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/slices/productsSlice";
+import LoadingMessage from "../loadingMessage";
+import { MOBILE, mobile } from "../../theme/mobile";
 import LayoutContainer from "../layoutContainer";
 import Section from "../section";
 import ProductCard from "../productCard";
@@ -32,7 +34,7 @@ function Discounts() {
     return (
       <Section>
         <LayoutContainer>
-          <Typography>Loading sale products...</Typography>
+          <LoadingMessage text="Loading sale products..." />
         </LayoutContainer>
       </Section>
     );
@@ -58,15 +60,15 @@ function Discounts() {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: "32px",
-              mb: "40px",
+              gap: mobile("12px", "32px"),
+              mb: mobile(MOBILE.titleGap, "40px"),
             }}
           >
             <Typography
               sx={{
                 fontFamily: "Montserrat, sans-serif",
                 fontWeight: 700,
-                fontSize: { xs: "40px", md: "64px" },
+                fontSize: mobile(MOBILE.h2, { xs: "40px", md: "64px" }),
                 lineHeight: "110%",
                 color: "#282828",
                 whiteSpace: "nowrap",
@@ -88,16 +90,16 @@ function Discounts() {
               to="/sales"
               variant="outlined"
               sx={{
-                minWidth: "126px",
-                height: "36px",
-                px: "16px",
+                minWidth: mobile("auto", "126px"),
+                height: mobile("32px", "36px"),
+                px: mobile("12px", "16px"),
                 borderRadius: "6px",
                 borderColor: "#DDDDDD",
                 color: "#8B8B8B",
                 textTransform: "none",
                 fontFamily: "Montserrat, sans-serif",
                 fontWeight: 500,
-                fontSize: "16px",
+                fontSize: mobile(MOBILE.small, "16px"),
                 lineHeight: "126%",
                 "&:hover": {
                   borderColor: "#282828",
