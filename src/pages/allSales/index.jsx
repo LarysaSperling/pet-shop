@@ -1,98 +1,42 @@
-import {
-  Box,
-  Typography,
-  Checkbox,
-  FormControl,
-  Select,
-  MenuItem,
-  OutlinedInput,
-} from "@mui/material";
-import { useEffect, useMemo } from "react";
+import { Typography } from "@mui/material";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../../redux/slices/productsSlice";
 import LoadingMessage from "../../components/loadingMessage";
 import LayoutContainer from "../../components/layoutContainer";
 import Breadcrumbs from "../../components/breadcrumbs";
-import ProductCard from "../../components/productCard";
-import useLocalStorage from "../../hooks/useLocalStorage";
+import ProductFilters from "../../components/productFilters";
+import ProductGrid from "../../components/productGrid";
+import useProductFilters, {
+  SORT_OPTIONS,
+  DISCOUNT_SORT_OPTION,
+} from "../../hooks/useProductFilters";
+
+const SALES_SORT_OPTIONS = [...SORT_OPTIONS, DISCOUNT_SORT_OPTION];
 
 function AllSales() {
   const dispatch = useDispatch();
   const { items, status, error } = useSelector((state) => state.products);
 
-  const [filters, setFilters] = useLocalStorage("salesFilters", {
-    priceFrom: "",
-    priceTo: "",
-    sortType: "default",
-    onlyDiscounted: true,
-  });
-
-  const { priceFrom, priceTo, sortType, onlyDiscounted } = filters;
+  const {
+    filters,
+    filteredProducts,
+    priceError,
+    setFilter,
+    setPrice,
+    resetFilters,
+  } = useProductFilters(
+    items,
+    "salesFilters",
+    { onlyDiscounted: true },
+    SALES_SORT_OPTIONS
+  );
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchProducts());
     }
   }, [dispatch, status]);
-
-  const filteredProducts = useMemo(() => {
-    let result = items.filter(
-      (item) =>
-        item.discont_price !== null &&
-        item.discont_price !== undefined &&
-        Number(item.discont_price) < Number(item.price)
-    );
-
-    if (!onlyDiscounted) {
-      result = [...items];
-    }
-
-    if (priceFrom) {
-      result = result.filter(
-        (item) => Number(item.discont_price ?? item.price) >= Number(priceFrom)
-      );
-    }
-
-    if (priceTo) {
-      result = result.filter(
-        (item) => Number(item.discont_price ?? item.price) <= Number(priceTo)
-      );
-    }
-
-    if (sortType === "price-asc") {
-      result.sort(
-        (a, b) =>
-          Number(a.discont_price ?? a.price) -
-          Number(b.discont_price ?? b.price)
-      );
-    }
-
-    if (sortType === "price-desc") {
-      result.sort(
-        (a, b) =>
-          Number(b.discont_price ?? b.price) -
-          Number(a.discont_price ?? a.price)
-      );
-    }
-
-    if (sortType === "title") {
-      result.sort((a, b) => a.title.localeCompare(b.title));
-    }
-
-    if (sortType === "discount-desc") {
-      result.sort((a, b) => {
-        const aDiscount = Math.round(
-          ((Number(a.price) - Number(a.discont_price)) / Number(a.price)) * 100
-        );
-        const bDiscount = Math.round(
-          ((Number(b.price) - Number(b.discont_price)) / Number(b.price)) * 100
-        );
-        return bDiscount - aDiscount;
-      });
-    }
-
-    return result;
-  }, [items, priceFrom, priceTo, sortType, onlyDiscounted]);
 
   if (status === "loading") {
     return (
@@ -122,6 +66,7 @@ function AllSales() {
       />
 
       <Typography
+        component="h1"
         sx={{
           fontFamily: "Montserrat, sans-serif",
           fontWeight: 700,
@@ -134,179 +79,16 @@ function AllSales() {
         Discounted items
       </Typography>
 
-      <Box
-        sx={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "24px",
-          alignItems: "center",
-          mb: "40px",
-        }}
-      >
-        <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 600,
-              fontSize: "20px",
-              lineHeight: "130%",
-              color: "#282828",
-            }}
-          >
-            Price
-          </Typography>
+      <ProductFilters
+        idPrefix="sales"
+        filters={filters}
+        priceError={priceError}
+        onPriceChange={setPrice}
+        onFilterChange={setFilter}
+        sortOptions={SALES_SORT_OPTIONS}
+      />
 
-          <OutlinedInput
-            id="sales-price-from"
-            name="priceFrom"
-            placeholder="from"
-            value={priceFrom}
-            onChange={(e) =>
-              setFilters((prev) => ({
-                ...prev,
-                priceFrom: e.target.value,
-              }))
-            }
-            autoComplete="off"
-            sx={{
-              width: "112px",
-              height: "36px",
-              borderRadius: "6px",
-              fontFamily: "Montserrat, sans-serif",
-              fontSize: "16px",
-            }}
-          />
-
-          <OutlinedInput
-            id="sales-price-to"
-            name="priceTo"
-            placeholder="to"
-            value={priceTo}
-            onChange={(e) =>
-              setFilters((prev) => ({
-                ...prev,
-                priceTo: e.target.value,
-              }))
-            }
-            autoComplete="off"
-            sx={{
-              width: "112px",
-              height: "36px",
-              borderRadius: "6px",
-              fontFamily: "Montserrat, sans-serif",
-              fontSize: "16px",
-            }}
-          />
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 600,
-              fontSize: "20px",
-              lineHeight: "130%",
-              color: "#282828",
-            }}
-          >
-            Discounted items
-          </Typography>
-
-          <Checkbox
-            id="sales-only-discounted"
-            name="onlyDiscounted"
-            checked={onlyDiscounted}
-            onChange={(e) =>
-              setFilters((prev) => ({
-                ...prev,
-                onlyDiscounted: e.target.checked,
-              }))
-            }
-            slotProps={{
-              input: {
-                "aria-label": "Discounted items only",
-              },
-            }}
-            sx={{
-              p: 0,
-              "& .MuiSvgIcon-root": {
-                fontSize: 32,
-              },
-            }}
-          />
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          <Typography
-            sx={{
-              fontFamily: "Montserrat, sans-serif",
-              fontWeight: 600,
-              fontSize: "20px",
-              lineHeight: "130%",
-              color: "#282828",
-            }}
-          >
-            Sorted
-          </Typography>
-
-          <FormControl sx={{ minWidth: "200px" }}>
-            <Select
-              id="sales-sort"
-              name="sortType"
-              value={sortType}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  sortType: e.target.value,
-                }))
-              }
-              size="small"
-              sx={{
-                height: "36px",
-                borderRadius: "6px",
-                fontFamily: "Montserrat, sans-serif",
-                fontSize: "16px",
-              }}
-            >
-              <MenuItem value="default">by default</MenuItem>
-              <MenuItem value="price-asc">price: low to high</MenuItem>
-              <MenuItem value="price-desc">price: high to low</MenuItem>
-              <MenuItem value="title">alphabetically</MenuItem>
-              <MenuItem value="discount-desc">biggest discount</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
-      </Box>
-
-      {filteredProducts.length === 0 ? (
-        <Typography
-          sx={{
-            fontFamily: "Montserrat, sans-serif",
-            fontWeight: 500,
-            fontSize: "20px",
-            lineHeight: "130%",
-            color: "#8B8B8B",
-          }}
-        >
-          No discounted products found.
-        </Typography>
-      ) : (
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: {
-              xs: "1fr",
-              sm: "repeat(2, 1fr)",
-              md: "repeat(4, 1fr)",
-            },
-            gap: "32px",
-          }}
-        >
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </Box>
-      )}
+      <ProductGrid products={filteredProducts} onResetFilters={resetFilters} />
     </LayoutContainer>
   );
 }
